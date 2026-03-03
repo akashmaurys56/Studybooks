@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>StudyBooks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="left-section">
+
+        <span class="menu-btn material-icons" onclick="toggleMenu()">menu</span>
+
+        <span class="back-btn material-icons" id="backBtn" onclick="goBack()">
+            arrow_back
+        </span>
+
+        <span class="title" id="pageTitle">StudyBooks</span>
+    </div>
+</div>
+
+<!-- SIDE MENU -->
+<div id="sideMenu" class="side-menu">
+    <p onclick="setLightMode()">Light Mode</p>
+    <p onclick="setDarkMode()">Dark Mode</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="content" class="container"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAW7iKFkof_hGxXtBNS8SA3VMfVM3O6QA0",
+    authDomain: "studybooks-423b6.firebaseapp.com",
+    projectId: "studybooks-423b6",
+    storageBucket: "studybooks-423b6.firebasestorage.app",
+    messagingSenderId: "542433930176",
+    appId: "1:542433930176:web:b9cb2970fc6370d8a27625"
+  };
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.collection = collection;
+window.getDocs = getDocs;
+window.doc = doc;
+
+</script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
