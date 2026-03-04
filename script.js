@@ -77,25 +77,18 @@ const appData = {
 
 async function loadHome() {
 
-    currentPage = "home";
-
-    document.getElementById("pageTitle").innerText = "StudyBooks";
-
-    document.querySelector(".menu-btn").style.display = "flex";
-    document.getElementById("backBtn").style.display = "none";
-
     let html = "<div class='grid'>";
 
-    const querySnapshot = await getDocs(collection(db, "sections"));
+    const snapshot = await db.collection("sections").get();
 
-    querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
+    snapshot.forEach(doc => {
+        const data = doc.data();
 
         html += `
-            <div class="card">
-                <span class="icon material-icons">menu_book</span>
-                ${data.name}
-            </div>
+        <div class="card">
+            <span class="icon material-icons">menu_book</span>
+            ${data.name}
+        </div>
         `;
     });
 
@@ -103,6 +96,8 @@ async function loadHome() {
 
     document.getElementById("content").innerHTML = html;
 }
+
+loadHome();
 
 /* ===== OPEN SECTION ===== */
 
