@@ -1,128 +1,65 @@
-let currentPage = "home";
-
 let navigationStack = [];
+let currentPage = { type: "home" };
 
-/* ===== LOAD HOME ===== */
-const appData = {
 
-    "NCERT Books (English)": {
-
-        "Class 9": {
-            "Maths": ["Number Systems", "Polynomials", "Coordinate Geometry"],
-            "Science": ["Matter in Our Surroundings", "Atoms and Molecules"],
-            "English": ["The Fun They Had", "The Sound of Music"]
-        },
-
-        "Class 10": {
-            "Maths": ["Real Numbers", "Polynomials", "Quadratic Equations"],
-            "Science": ["Chemical Reactions", "Life Processes"],
-            "English": ["A Letter to God", "Nelson Mandela"]
-        },
-
-        "Class 11": {
-            "Physics": ["Physical World", "Units and Measurements"],
-            "Chemistry": ["Some Basic Concepts of Chemistry"],
-            "Maths": ["Sets", "Relations and Functions"]
-        },
-
-        "Class 12": {
-            "Physics": ["Electric Charges", "Current Electricity"],
-            "Chemistry": ["Solid State", "Solutions"],
-            "Maths": ["Relations and Functions", "Matrices"]
-        }
-    },
-
-    "NCERT Books (Hindi)": {
-
-        "Class 9": {
-            "गणित": ["संख्या पद्धति", "बहुपद"],
-            "विज्ञान": ["हमारे आसपास के पदार्थ"],
-            "हिंदी": ["दो बैलों की कथा"]
-        },
-
-        "Class 10": {
-            "गणित": ["वास्तविक संख्याएँ", "बहुपद"],
-            "विज्ञान": ["रासायनिक अभिक्रियाएँ"],
-            "हिंदी": ["बड़े भाई साहब"]
-        },
-
-        "Class 11": {
-            "भौतिकी": ["भौतिक जगत"],
-            "रसायन विज्ञान": ["रसायन के मूल सिद्धांत"]
-        },
-
-        "Class 12": {
-            "भौतिकी": ["विद्युत आवेश"],
-            "रसायन विज्ञान": ["ठोस अवस्था"]
-        }
-    },
-
-    "NCERT Solutions": {
-        "Class 9": {
-            "Maths Solutions": ["Chapter 1 Solutions", "Chapter 2 Solutions"]
-        },
-        "Class 10": {
-            "Maths Solutions": ["Real Numbers Solutions"]
-        }
-    },
-
-    "NCERT Notes": {
-        "Class 9": {
-            "Science Notes": ["Matter Notes"]
-        },
-        "Class 10": {
-            "Science Notes": ["Chemical Reaction Notes"]
-        }
-    }
-
-};
+/* ---------------- HOME ---------------- */
 
 async function loadHome() {
 
-    currentPage = "home";
+currentPage = { type: "home" };
 
-    document.getElementById("pageTitle").innerText = "StudyBooks";
+document.getElementById("pageTitle").innerText = "StudyBooks";
 
-    document.querySelector(".menu-btn").style.display = "flex";
-    document.getElementById("backBtn").style.display = "none";
+document.querySelector(".menu-btn").style.display = "flex";
+document.getElementById("backBtn").style.display = "none";
 
-    let html = "<div class='grid'>";
+let html = "<div class='grid'>";
 
-    const snapshot = await db.collection("sections").get();
+const snapshot = await db.collection("sections").get();
 
-    snapshot.forEach(doc => {
+snapshot.forEach(doc => {
 
-        const data = doc.data();
+const data = doc.data();
+const sectionName = data.name || "No Name";
 
-        const sectionName = data.name || "No Name";
+html += `
+<div class="card"
+onclick="openSection('${doc.id}','${sectionName}')">
 
-        html += `
-        <div class="card" onclick="openSection('${doc.id}','${sectionName}')">
+<span class="icon material-icons">menu_book</span>
 
-            <span class="icon material-icons">menu_book</span>
+${sectionName}
 
-            ${sectionName}
+</div>
+`;
 
-        </div>
-        `;
+});
 
-    });
+html += "</div>";
 
-    html += "</div>";
-
-    document.getElementById("content").innerHTML = html;
+document.getElementById("content").innerHTML = html;
 
 }
 
-loadHome();
 
-/* ===== OPEN SECTION ===== */
+/* ---------------- SECTION ---------------- */
 
-async function openSection(sectionId, sectionName) {
+async function openSection(sectionId, sectionName, save = true) {
 
-navigationStack.push(loadHome);
+if(save){
+navigationStack.push({...currentPage});
+}
+
+currentPage = {
+type: "section",
+sectionId,
+sectionName
+};
 
 document.getElementById("pageTitle").innerText = sectionName;
+
+document.querySelector(".menu-btn").style.display = "none";
+document.getElementById("backBtn").style.display = "flex";
 
 let html = "<div class='grid'>";
 
@@ -136,7 +73,8 @@ snapshot.forEach(doc => {
 const data = doc.data();
 
 html += `
-<div class="card" onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
+<div class="card"
+onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
 ${data.name}
 </div>
 `;
@@ -149,9 +87,21 @@ document.getElementById("content").innerHTML = html;
 
 }
 
-async function openClass(sectionId, classId, className) {
 
-navigationStack.push(()=>openSection(sectionId,sectionName));
+/* ---------------- CLASS ---------------- */
+
+async function openClass(sectionId, classId, className, save = true) {
+
+if(save){
+navigationStack.push({...currentPage});
+}
+
+currentPage = {
+type: "class",
+sectionId,
+classId,
+className
+};
 
 document.getElementById("pageTitle").innerText = className;
 
@@ -169,7 +119,8 @@ snapshot.forEach(doc => {
 const data = doc.data();
 
 html += `
-<div class="card" onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
+<div class="card"
+onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
 ${data.name}
 </div>
 `;
@@ -182,9 +133,22 @@ document.getElementById("content").innerHTML = html;
 
 }
 
-async function openSubject(sectionId,classId,subjectId,subjectName){
 
-navigationStack.push(()=>openClass(sectionId,classId,className));
+/* ---------------- SUBJECT ---------------- */
+
+async function openSubject(sectionId, classId, subjectId, subjectName, save = true) {
+
+if(save){
+navigationStack.push({...currentPage});
+}
+
+currentPage = {
+type: "subject",
+sectionId,
+classId,
+subjectId,
+subjectName
+};
 
 document.getElementById("pageTitle").innerText = subjectName;
 
@@ -217,14 +181,15 @@ document.getElementById("content").innerHTML = html;
 
 }
 
-/* ===== BACK ===== */
 
-function goBack() {
+/* ---------------- BACK ---------------- */
+
+function goBack(){
 
 if(navigationStack.length > 0){
 
-const previousPage = navigationStack.pop();
-previousPage();
+currentPage = navigationStack.pop();
+renderPage();
 
 }else{
 
@@ -234,22 +199,41 @@ loadHome();
 
 }
 
-function closeMenu() {
-    document.getElementById("sideMenu").style.left = "-220px";
+
+/* ---------------- RENDER CONTROLLER ---------------- */
+
+async function renderPage(){
+
+if(currentPage.type === "home"){
+loadHome();
 }
 
-/* ===== DARK MODE ===== */
-
-function setDarkMode() {
-    document.body.classList.add("dark");
-    closeMenu();
+if(currentPage.type === "section"){
+openSection(currentPage.sectionId,currentPage.sectionName,false);
 }
 
-function setLightMode() {
-    document.body.classList.remove("dark");
-    closeMenu();
+if(currentPage.type === "class"){
+openClass(
+currentPage.sectionId,
+currentPage.classId,
+currentPage.className,
+false
+);
 }
 
-/* ===== INIT ===== */
+if(currentPage.type === "subject"){
+openSubject(
+currentPage.sectionId,
+currentPage.classId,
+currentPage.subjectId,
+currentPage.subjectName,
+false
+);
+}
+
+}
+
+
+/* ---------------- INIT ---------------- */
 
 loadHome();
