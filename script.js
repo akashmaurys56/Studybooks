@@ -1,5 +1,7 @@
 let currentPage = "home";
 
+let navigationStack = [];
+
 /* ===== LOAD HOME ===== */
 const appData = {
 
@@ -118,6 +120,8 @@ loadHome();
 
 async function openSection(sectionId, sectionName) {
 
+navigationStack.push(loadHome);
+
 document.getElementById("pageTitle").innerText = sectionName;
 
 let html = "<div class='grid'>";
@@ -146,6 +150,8 @@ document.getElementById("content").innerHTML = html;
 }
 
 async function openClass(sectionId, classId, className) {
+
+navigationStack.push(()=>openSection(sectionId,sectionName));
 
 document.getElementById("pageTitle").innerText = className;
 
@@ -177,6 +183,8 @@ document.getElementById("content").innerHTML = html;
 }
 
 async function openSubject(sectionId,classId,subjectId,subjectName){
+
+navigationStack.push(()=>openClass(sectionId,classId,className));
 
 document.getElementById("pageTitle").innerText = subjectName;
 
@@ -212,19 +220,18 @@ document.getElementById("content").innerHTML = html;
 /* ===== BACK ===== */
 
 function goBack() {
-    loadHome();
+
+if(navigationStack.length > 0){
+
+const previousPage = navigationStack.pop();
+previousPage();
+
+}else{
+
+loadHome();
+
 }
 
-/* ===== MENU ===== */
-
-function toggleMenu() {
-    const menu = document.getElementById("sideMenu");
-
-    if (menu.style.left === "0px") {
-        menu.style.left = "-220px";
-    } else {
-        menu.style.left = "0px";
-    }
 }
 
 function closeMenu() {
