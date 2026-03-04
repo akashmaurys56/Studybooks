@@ -312,9 +312,11 @@ document.body.classList.add("admin");
 
 function logout(){
 
-localStorage.removeItem("userEmail");
+firebase.auth().signOut().then(()=>{
 
 window.location.href="login.html";
+
+});
 
 }
 
