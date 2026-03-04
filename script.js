@@ -345,13 +345,9 @@ document.getElementById("pageTitle").innerText = "Add Section";
 
 document.getElementById("content").innerHTML = `
 
-<div class="admin-form">
-
 <input id="sectionName" placeholder="Section Name">
 
 <button onclick="addSection()">Add Section</button>
-
-</div>
 
 `;
 
