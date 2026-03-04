@@ -47,6 +47,22 @@ Add Section
 <script>
 const ADMIN_EMAIL = "mauryanumesh195@gmail.com";
 
+firebase.auth().onAuthStateChanged(function(user){
+
+if(!user){
+return; // wait for auth
+}
+
+if(user.email !== ADMIN_EMAIL){
+
+alert("Access denied");
+
+window.location.href = "../index.html";
+
+}
+
+});
+
 const firebaseConfig = {
   apiKey: "AIzaSyAW7iKFkof_hGxXtBNS8SA3VMfVM3O6QA0",
   authDomain: "studybooks-423b6.firebaseapp.com",
@@ -71,26 +87,6 @@ document.getElementById("content").innerHTML = `
 `;
 
 }
-
-firebase.auth().onAuthStateChanged(function(user){
-
-if(user){
-
-if(user.email !== ADMIN_EMAIL){
-
-alert("Access denied");
-
-window.location.href="../index.html";
-
-}
-
-}else{
-
-window.location.href="../login.html";
-
-}
-
-});
 
 
 
