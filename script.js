@@ -296,4 +296,3 @@ window.location.href="login.html";
 /* ================= START ================= */
 
 checkLogin();
-loadHome();
