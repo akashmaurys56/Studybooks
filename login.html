@@ -6,33 +6,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>StudyBooks Login</title>
-
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<title>Login</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:#f5f5f5;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
+background:#f5f5f5;
 margin:0;
 }
 
-.login-box{
+.box{
 background:white;
 padding:40px;
 border-radius:10px;
-box-shadow:0 3px 15px rgba(0,0,0,0.2);
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
 text-align:center;
-width:280px;
-}
-
-.login-box h2{
-margin-bottom:20px;
 }
 
 button{
@@ -40,26 +33,20 @@ background:#4285F4;
 border:none;
 color:white;
 padding:12px 20px;
-border-radius:6px;
 font-size:16px;
+border-radius:6px;
 cursor:pointer;
-width:100%;
-}
-
-button:hover{
-background:#3367D6;
 }
 
 </style>
 
 </head>
 
-
 <body>
 
-<div class="login-box">
+<div class="box">
 
-<h2>StudyBooks</h2>
+<h2>StudyBooks Login</h2>
 
 <button onclick="googleLogin()">
 Login with Google
@@ -69,55 +56,41 @@ Login with Google
 
 
 
-<!-- Firebase -->
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
 
 
 <script>
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAW7iKFkof_hGxXtBNS8SA3VMfVM3O6QA0",
-  authDomain: "studybooks-423b6.firebaseapp.com",
-  projectId: "studybooks-423b6",
-  storageBucket: "studybooks-423b6.firebasestorage.app",
-  messagingSenderId: "542433930176",
-  appId: "1:542433930176:web:b9cb2970fc6370d8a27625"
+
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_AUTH_DOMAIN",
+projectId: "YOUR_PROJECT_ID",
+appId: "YOUR_APP_ID"
+
 };
 
 firebase.initializeApp(firebaseConfig);
 
 
-
-/* Google Login */
+// login function
 
 function googleLogin(){
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
 firebase.auth().signInWithPopup(provider)
+.then(()=>{
 
-.then((result)=>{
-
-// Login successful
 window.location.href="index.html";
-
-})
-
-.catch((error)=>{
-
-alert("Login Failed");
-console.log(error);
 
 });
 
 }
 
 
-
-/* Auto login if already signed in */
+// auto login check
 
 firebase.auth().onAuthStateChanged(function(user){
 
@@ -130,7 +103,6 @@ window.location.href="index.html";
 });
 
 </script>
-
 
 </body>
 
