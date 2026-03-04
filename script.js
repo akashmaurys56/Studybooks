@@ -339,6 +339,48 @@ Add Section
 
 }
 
+function showAddSection(){
+
+document.getElementById("pageTitle").innerText = "Add Section";
+
+document.getElementById("content").innerHTML = `
+
+<div class="admin-form">
+
+<input id="sectionName" placeholder="Section Name">
+
+<button onclick="addSection()">Add Section</button>
+
+</div>
+
+`;
+
+}
+
+function addSection(){
+
+const name = document.getElementById("sectionName").value;
+
+if(!name){
+alert("Enter section name");
+return;
+}
+
+db.collection("sections").add({
+
+name:name
+
+}).then(()=>{
+
+alert("Section Added");
+
+loadHome();
+
+});
+
+}
+
+
 
 /* ================= START ================= */
 
