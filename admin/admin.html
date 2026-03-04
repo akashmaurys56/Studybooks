@@ -1,33 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>StudyBooks Admin</title>
+<title>Admin Panel</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="../firebase.js"></script>
 
 <style>
 
 body{
 font-family:Arial;
 background:#f5f5f5;
-padding:20px;
+padding:40px;
 }
 
 .card{
 background:white;
-padding:20px;
-margin:10px;
+padding:30px;
 border-radius:10px;
-box-shadow:0 2px 10px rgba(0,0,0,0.2);
-cursor:pointer;
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
 }
 
 </style>
@@ -38,11 +33,11 @@ cursor:pointer;
 
 <h2>StudyBooks Admin Panel</h2>
 
-<div class="card" onclick="showAddSection()">
-Add Section
-</div>
+<div class="card">
 
-<div id="content"></div>
+<button onclick="logout()">Logout</button>
+
+</div>
 
 <script>
 
@@ -53,6 +48,7 @@ firebase.auth().onAuthStateChanged(function(user){
 if(!user){
 
 window.location.href="admin-login.html";
+
 return;
 
 }
@@ -69,44 +65,11 @@ window.location.href="../index.html";
 
 });
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAW7iKFkof_hGxXtBNS8SA3VMfVM3O6QA0",
-  authDomain: "studybooks-423b6.firebaseapp.com",
-  projectId: "studybooks-423b6",
-  storageBucket: "studybooks-423b6.firebasestorage.app",
-  messagingSenderId: "542433930176",
-  appId: "1:542433930176:web:b9cb2970fc6370d8a27625"
-};
+function logout(){
 
-firebase.initializeApp(firebaseConfig);
+firebase.auth().signOut().then(()=>{
 
-const db = firebase.firestore();
-
-function showAddSection(){
-
-document.getElementById("content").innerHTML = `
-
-<input id="sectionName" placeholder="Section Name">
-
-<button onclick="addSection()">Add</button>
-
-`;
-
-}
-
-
-
-function addSection(){
-
-const name = document.getElementById("sectionName").value;
-
-db.collection("sections").add({
-
-name:name
-
-}).then(()=>{
-
-alert("Section Added");
+window.location.href="admin-login.html";
 
 });
 
@@ -115,4 +78,5 @@ alert("Section Added");
 </script>
 
 </body>
+
 </html>
