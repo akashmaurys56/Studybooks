@@ -50,8 +50,12 @@ const ADMIN_EMAIL = "mauryanumesh195@gmail.com";
 firebase.auth().onAuthStateChanged(function(user){
 
 if(!user){
-return; // wait for auth
+
+window.location.href="admin-login.html";
+
 }
+
+});
 
 if(user.email !== ADMIN_EMAIL){
 
