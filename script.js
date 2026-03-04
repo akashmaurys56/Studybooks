@@ -32,6 +32,15 @@ document.body.classList.remove("dark");
 closeMenu();
 }
 
+function logout(){
+
+firebase.auth().signOut().then(()=>{
+
+window.location.href="login.html";
+
+});
+
+}
 
 /* ================= HOME ================= */
 
