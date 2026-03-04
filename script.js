@@ -285,6 +285,14 @@ document.body.classList.add("admin");
 
 }
 
+function logout(){
+
+localStorage.removeItem("userEmail");
+
+window.location.href="login.html";
+
+}
+
 /* ================= START ================= */
 
 checkLogin();
