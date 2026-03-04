@@ -1,3 +1,19 @@
+firebase.auth().onAuthStateChanged(function(user){
+
+if(user){
+
+// user logged in
+console.log("User logged in");
+
+}else{
+
+// not logged in
+window.location.href="login.html";
+
+}
+
+});
+
 let navigationStack = [];
 let currentPage = { type: "home" };
 
