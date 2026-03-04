@@ -328,14 +328,9 @@ document.getElementById("content").innerHTML = `
 
 <div class="grid">
 
-<div class="card" onclick="addSection()">
+<div class="card" onclick="showAddSection()">
 <span class="material-icons">add</span>
 Add Section
-</div>
-
-<div class="card" onclick="addPDF()">
-<span class="material-icons">upload_file</span>
-Upload PDF
 </div>
 
 </div>
