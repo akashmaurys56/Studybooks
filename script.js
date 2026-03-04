@@ -320,6 +320,31 @@ window.location.href="login.html";
 
 }
 
+function openAdmin(){
+
+document.getElementById("pageTitle").innerText = "Admin Panel";
+
+document.getElementById("content").innerHTML = `
+
+<div class="grid">
+
+<div class="card" onclick="addSection()">
+<span class="material-icons">add</span>
+Add Section
+</div>
+
+<div class="card" onclick="addPDF()">
+<span class="material-icons">upload_file</span>
+Upload PDF
+</div>
+
+</div>
+
+`;
+
+}
+
+
 /* ================= START ================= */
 
 checkLogin();
