@@ -77,24 +77,39 @@ const appData = {
 
 async function loadHome() {
 
+    currentPage = "home";
+
+    document.getElementById("pageTitle").innerText = "StudyBooks";
+
+    document.querySelector(".menu-btn").style.display = "flex";
+    document.getElementById("backBtn").style.display = "none";
+
     let html = "<div class='grid'>";
 
     const snapshot = await db.collection("sections").get();
 
     snapshot.forEach(doc => {
+
         const data = doc.data();
 
+        const sectionName = data.name || "No Name";
+
         html += `
-        <div class="card">
+        <div class="card" onclick="openSection('${doc.id}','${sectionName}')">
+
             <span class="icon material-icons">menu_book</span>
-            ${data.name}
+
+            ${sectionName}
+
         </div>
         `;
+
     });
 
     html += "</div>";
 
     document.getElementById("content").innerHTML = html;
+
 }
 
 loadHome();
@@ -103,94 +118,95 @@ loadHome();
 
 async function openSection(sectionId, sectionName) {
 
-    currentPage = "class";
+document.getElementById("pageTitle").innerText = sectionName;
 
-    document.getElementById("pageTitle").innerText = sectionName;
+let html = "<div class='grid'>";
 
-    document.querySelector(".menu-btn").style.display = "none";
-    document.getElementById("backBtn").style.display = "flex";
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.get();
 
-    closeMenu();
+snapshot.forEach(doc => {
 
-    let html = "<div class='grid'>";
+const data = doc.data();
 
-    const snapshot = await db.collection("sections")
-                             .doc(sectionId)
-                             .collection("classes")
-                             .get();
+html += `
+<div class="card" onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
+${data.name}
+</div>
+`;
 
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        html += `
-            <div class="card" onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
-                ${data.name}
-            </div>
-        `;
-    });
+});
 
-    html += "</div>";
+html += "</div>";
 
-    document.getElementById("content").innerHTML = html;
+document.getElementById("content").innerHTML = html;
+
 }
 
 async function openClass(sectionId, classId, className) {
 
-    currentPage = "subject";
+document.getElementById("pageTitle").innerText = className;
 
-    document.getElementById("pageTitle").innerText = className;
+let html = "<div class='grid'>";
 
-    let html = "<div class='grid'>";
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.doc(classId)
+.collection("subjects")
+.get();
 
-    const snapshot = await db.collection("sections")
-                             .doc(sectionId)
-                             .collection("classes")
-                             .doc(classId)
-                             .collection("subjects")
-                             .get();
+snapshot.forEach(doc => {
 
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        html += `
-            <div class="card" onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
-                ${data.name}
-            </div>
-        `;
-    });
+const data = doc.data();
 
-    html += "</div>";
+html += `
+<div class="card" onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
+${data.name}
+</div>
+`;
 
-    document.getElementById("content").innerHTML = html;
+});
+
+html += "</div>";
+
+document.getElementById("content").innerHTML = html;
+
 }
 
-async function openSubject(sectionId, classId, subjectId, subjectName) {
+async function openSubject(sectionId,classId,subjectId,subjectName){
 
-    currentPage = "chapter";
+document.getElementById("pageTitle").innerText = subjectName;
 
-    document.getElementById("pageTitle").innerText = subjectName;
+let html = "<div class='grid'>";
 
-    let html = "<div class='grid'>";
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.doc(classId)
+.collection("subjects")
+.doc(subjectId)
+.collection("chapters")
+.get();
 
-    const snapshot = await db.collection("sections")
-                             .doc(sectionId)
-                             .collection("classes")
-                             .doc(classId)
-                             .collection("subjects")
-                             .doc(subjectId)
-                             .collection("chapters")
-                             .get();
+snapshot.forEach(doc => {
 
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        html += `
-            <div class="card">
-                ${data.name}
-            </div>
-        `;
-    });
+const data = doc.data();
 
-    html += "</div>";
+html += `
+<div class="card">
+${data.name}
+</div>
+`;
 
-    document.getElementById("content").innerHTML = html;
+});
+
+html += "</div>";
+
+document.getElementById("content").innerHTML = html;
+
 }
 
 /* ===== BACK ===== */
