@@ -142,3 +142,11 @@ transition:transform 0.4s, opacity 0.8s;
 .dark .topbar {
     background: #1e1e1e;
 }
+
+#adminBtn{
+display:none;
+}
+
+body.admin #adminBtn{
+display:block;
+}
