@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Login</title>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<style>
+
+body{
+font-family: Arial;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:#f5f5f5;
+}
+
+.box{
+background:white;
+padding:40px;
+border-radius:10px;
+text-align:center;
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+button{
+padding:12px 25px;
+font-size:16px;
+border:none;
+background:#34a853;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Admin Login</h2>
+
+<button onclick="login()">Login with Google</button>
+
+</div>
+
+<script>
+
+var firebaseConfig = {
+
+apiKey: "YOUR_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_PROJECT"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const ADMIN_EMAIL = "mauryanumesh195@gmail.com";
+
+function login(){
+
+var provider = new firebase.auth.GoogleAuthProvider();
+
+firebase.auth().signInWithPopup(provider)
+
+.then(function(result){
+
+let user = result.user;
+
+if(user.email === ADMIN_EMAIL){
+
+window.location.href="admin.html";
+
+}
+
+else{
+
+alert("Access denied");
+
+firebase.auth().signOut();
+
+}
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
