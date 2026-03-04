@@ -266,7 +266,26 @@ false
 
 }
 
+function checkLogin(){
+
+const email = localStorage.getItem("userEmail");
+
+if(!email){
+
+window.location.href = "login.html";
+return;
+
+}
+
+if(email === ADMIN_EMAIL){
+
+document.body.classList.add("admin");
+
+}
+
+}
 
 /* ================= START ================= */
 
+checkLogin();
 loadHome();
