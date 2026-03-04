@@ -9,6 +9,8 @@
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <style>
@@ -43,6 +45,7 @@ Add Section
 <div id="content"></div>
 
 <script>
+const ADMIN_EMAIL = "mauryanumesh195@gmail.com";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAW7iKFkof_hGxXtBNS8SA3VMfVM3O6QA0",
@@ -68,6 +71,28 @@ document.getElementById("content").innerHTML = `
 `;
 
 }
+
+firebase.auth().onAuthStateChanged(function(user){
+
+if(user){
+
+if(user.email !== ADMIN_EMAIL){
+
+alert("Access denied");
+
+window.location.href="../index.html";
+
+}
+
+}else{
+
+window.location.href="../login.html";
+
+}
+
+});
+
+
 
 function addSection(){
 
