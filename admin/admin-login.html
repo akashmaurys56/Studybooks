@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <title>Admin Login</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
+<script src="../firebase.js"></script>
+
 <style>
+
 body{
 font-family:Arial;
 display:flex;
@@ -33,35 +38,30 @@ color:white;
 border-radius:6px;
 cursor:pointer;
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="box">
+
 <h2>Admin Login</h2>
+
 <button onclick="login()">Login with Google</button>
+
 </div>
 
 <script>
-
-var firebaseConfig = {
-  apiKey: "AIzaSyAW7iKFkof_hGxXtBNS8SA3VMfVM3O6QA0",
-  authDomain: "studybooks-423b6.firebaseapp.com",
-  projectId: "studybooks-423b6",
-};
-
-firebase.initializeApp(firebaseConfig);
 
 const ADMIN_EMAIL = "mauryanumesh195@gmail.com";
 
 firebase.auth().onAuthStateChanged(function(user){
 
-if(user){
+if(user && user.email === ADMIN_EMAIL){
 
-if(user.email === ADMIN_EMAIL){
 window.location.href="admin.html";
-}
 
 }
 
@@ -72,6 +72,7 @@ function login(){
 var provider = new firebase.auth.GoogleAuthProvider();
 
 firebase.auth().signInWithPopup(provider)
+
 .then(function(result){
 
 let user = result.user;
@@ -80,9 +81,12 @@ if(user.email === ADMIN_EMAIL){
 
 window.location.href="admin.html";
 
-}else{
+}
+
+else{
 
 alert("Access denied");
+
 firebase.auth().signOut();
 
 }
@@ -94,4 +98,5 @@ firebase.auth().signOut();
 </script>
 
 </body>
+
 </html>
