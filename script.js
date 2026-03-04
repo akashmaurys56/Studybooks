@@ -1,6 +1,8 @@
 let navigationStack = [];
 let currentPage = { type: "home" };
 
+const ADMIN_EMAIL = "mauryaumesh195@gmail.com";
+
 
 /* ================= MENU ================= */
 
