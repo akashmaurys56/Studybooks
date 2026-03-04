@@ -1,239 +1,225 @@
 let navigationStack = [];
 let currentPage = { type: "home" };
 
+/* ================= MENU ================= */
 
-/* ---------------- HOME ---------------- */
+function toggleMenu() {
+  const menu = document.getElementById("sideMenu");
+
+  if (menu.style.left === "0px") {
+    menu.style.left = "-220px";
+  } else {
+    menu.style.left = "0px";
+  }
+}
+
+function closeMenu() {
+  document.getElementById("sideMenu").style.left = "-220px";
+}
+
+function setDarkMode() {
+  document.body.classList.add("dark");
+  closeMenu();
+}
+
+function setLightMode() {
+  document.body.classList.remove("dark");
+  closeMenu();
+}
+
+/* ================= HOME ================= */
 
 async function loadHome() {
+  currentPage = { type: "home" };
 
-currentPage = { type: "home" };
+  document.getElementById("pageTitle").innerText = "StudyBooks";
 
-document.getElementById("pageTitle").innerText = "StudyBooks";
+  document.querySelector(".menu-btn").style.display = "flex";
+  document.getElementById("backBtn").style.display = "none";
 
-document.querySelector(".menu-btn").style.display = "flex";
-document.getElementById("backBtn").style.display = "none";
+  let html = "<div class='grid'>";
 
-let html = "<div class='grid'>";
+  const snapshot = await db.collection("sections").get();
 
-const snapshot = await db.collection("sections").get();
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const sectionName = data.name || "No Name";
 
-snapshot.forEach(doc => {
+    html += `
+      <div class="card" onclick="openSection('${doc.id}','${sectionName}')">
+        <span class="icon material-icons">menu_book</span>
+        ${sectionName}
+      </div>
+    `;
+  });
 
-const data = doc.data();
-const sectionName = data.name || "No Name";
+  html += "</div>";
 
-html += `
-<div class="card"
-onclick="openSection('${doc.id}','${sectionName}')">
-
-<span class="icon material-icons">menu_book</span>
-
-${sectionName}
-
-</div>
-`;
-
-});
-
-html += "</div>";
-
-document.getElementById("content").innerHTML = html;
-
+  document.getElementById("content").innerHTML = html;
 }
 
+/* ================= SECTION ================= */
 
-/* ---------------- SECTION ---------------- */
+async function openSection(sectionId, sectionName) {
+  navigationStack.push({ ...currentPage });
 
-async function openSection(sectionId, sectionName, save = true) {
+  currentPage = {
+    type: "section",
+    sectionId,
+    sectionName
+  };
 
-if(save){
-navigationStack.push({...currentPage});
+  document.getElementById("pageTitle").innerText = sectionName;
+
+  document.querySelector(".menu-btn").style.display = "none";
+  document.getElementById("backBtn").style.display = "flex";
+
+  closeMenu();
+
+  let html = "<div class='grid'>";
+
+  const snapshot = await db
+    .collection("sections")
+    .doc(sectionId)
+    .collection("classes")
+    .get();
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+
+    html += `
+      <div class="card" onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
+        ${data.name}
+      </div>
+    `;
+  });
+
+  html += "</div>";
+
+  document.getElementById("content").innerHTML = html;
 }
 
-currentPage = {
-type: "section",
-sectionId,
-sectionName
-};
+/* ================= CLASS ================= */
 
-document.getElementById("pageTitle").innerText = sectionName;
+async function openClass(sectionId, classId, className) {
+  navigationStack.push({ ...currentPage });
 
-document.querySelector(".menu-btn").style.display = "none";
-document.getElementById("backBtn").style.display = "flex";
+  currentPage = {
+    type: "class",
+    sectionId,
+    classId,
+    className
+  };
 
-let html = "<div class='grid'>";
+  document.getElementById("pageTitle").innerText = className;
 
-const snapshot = await db.collection("sections")
-.doc(sectionId)
-.collection("classes")
-.get();
+  let html = "<div class='grid'>";
 
-snapshot.forEach(doc => {
+  const snapshot = await db
+    .collection("sections")
+    .doc(sectionId)
+    .collection("classes")
+    .doc(classId)
+    .collection("subjects")
+    .get();
 
-const data = doc.data();
+  snapshot.forEach(doc => {
+    const data = doc.data();
 
-html += `
-<div class="card"
-onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
-${data.name}
-</div>
-`;
+    html += `
+      <div class="card" onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
+        ${data.name}
+      </div>
+    `;
+  });
 
-});
+  html += "</div>";
 
-html += "</div>";
-
-document.getElementById("content").innerHTML = html;
-
+  document.getElementById("content").innerHTML = html;
 }
 
+/* ================= SUBJECT ================= */
 
-/* ---------------- CLASS ---------------- */
+async function openSubject(sectionId, classId, subjectId, subjectName) {
+  navigationStack.push({ ...currentPage });
 
-async function openClass(sectionId, classId, className, save = true) {
+  currentPage = {
+    type: "subject",
+    sectionId,
+    classId,
+    subjectId,
+    subjectName
+  };
 
-if(save){
-navigationStack.push({...currentPage});
+  document.getElementById("pageTitle").innerText = subjectName;
+
+  let html = "<div class='grid'>";
+
+  const snapshot = await db
+    .collection("sections")
+    .doc(sectionId)
+    .collection("classes")
+    .doc(classId)
+    .collection("subjects")
+    .doc(subjectId)
+    .collection("chapters")
+    .get();
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+
+    html += `
+      <div class="card">
+        ${data.name}
+      </div>
+    `;
+  });
+
+  html += "</div>";
+
+  document.getElementById("content").innerHTML = html;
 }
 
-currentPage = {
-type: "class",
-sectionId,
-classId,
-className
-};
+/* ================= BACK ================= */
 
-document.getElementById("pageTitle").innerText = className;
-
-let html = "<div class='grid'>";
-
-const snapshot = await db.collection("sections")
-.doc(sectionId)
-.collection("classes")
-.doc(classId)
-.collection("subjects")
-.get();
-
-snapshot.forEach(doc => {
-
-const data = doc.data();
-
-html += `
-<div class="card"
-onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
-${data.name}
-</div>
-`;
-
-});
-
-html += "</div>";
-
-document.getElementById("content").innerHTML = html;
-
+function goBack() {
+  if (navigationStack.length > 0) {
+    currentPage = navigationStack.pop();
+    renderPage();
+  } else {
+    loadHome();
+  }
 }
 
+/* ================= PAGE RENDER ================= */
 
-/* ---------------- SUBJECT ---------------- */
+async function renderPage() {
+  if (currentPage.type === "home") {
+    loadHome();
+  }
 
-async function openSubject(sectionId, classId, subjectId, subjectName, save = true) {
+  if (currentPage.type === "section") {
+    openSection(currentPage.sectionId, currentPage.sectionName);
+  }
 
-if(save){
-navigationStack.push({...currentPage});
+  if (currentPage.type === "class") {
+    openClass(
+      currentPage.sectionId,
+      currentPage.classId,
+      currentPage.className
+    );
+  }
+
+  if (currentPage.type === "subject") {
+    openSubject(
+      currentPage.sectionId,
+      currentPage.classId,
+      currentPage.subjectId,
+      currentPage.subjectName
+    );
+  }
 }
 
-currentPage = {
-type: "subject",
-sectionId,
-classId,
-subjectId,
-subjectName
-};
-
-document.getElementById("pageTitle").innerText = subjectName;
-
-let html = "<div class='grid'>";
-
-const snapshot = await db.collection("sections")
-.doc(sectionId)
-.collection("classes")
-.doc(classId)
-.collection("subjects")
-.doc(subjectId)
-.collection("chapters")
-.get();
-
-snapshot.forEach(doc => {
-
-const data = doc.data();
-
-html += `
-<div class="card">
-${data.name}
-</div>
-`;
-
-});
-
-html += "</div>";
-
-document.getElementById("content").innerHTML = html;
-
-}
-
-
-/* ---------------- BACK ---------------- */
-
-function goBack(){
-
-if(navigationStack.length > 0){
-
-currentPage = navigationStack.pop();
-renderPage();
-
-}else{
-
-loadHome();
-
-}
-
-}
-
-
-/* ---------------- RENDER CONTROLLER ---------------- */
-
-async function renderPage(){
-
-if(currentPage.type === "home"){
-loadHome();
-}
-
-if(currentPage.type === "section"){
-openSection(currentPage.sectionId,currentPage.sectionName,false);
-}
-
-if(currentPage.type === "class"){
-openClass(
-currentPage.sectionId,
-currentPage.classId,
-currentPage.className,
-false
-);
-}
-
-if(currentPage.type === "subject"){
-openSubject(
-currentPage.sectionId,
-currentPage.classId,
-currentPage.subjectId,
-currentPage.subjectName,
-false
-);
-}
-
-}
-
-
-/* ---------------- INIT ---------------- */
+/* ================= START ================= */
 
 loadHome();
