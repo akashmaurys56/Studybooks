@@ -1,224 +1,269 @@
 let navigationStack = [];
 let currentPage = { type: "home" };
 
+
 /* ================= MENU ================= */
 
 function toggleMenu() {
-  const menu = document.getElementById("sideMenu");
 
-  if (menu.style.left === "0px") {
-    menu.style.left = "-220px";
-  } else {
-    menu.style.left = "0px";
-  }
+const menu = document.getElementById("sideMenu");
+
+if(menu.style.left === "0px"){
+menu.style.left = "-220px";
+}else{
+menu.style.left = "0px";
 }
 
-function closeMenu() {
-  document.getElementById("sideMenu").style.left = "-220px";
 }
 
-function setDarkMode() {
-  document.body.classList.add("dark");
-  closeMenu();
+function closeMenu(){
+document.getElementById("sideMenu").style.left = "-220px";
 }
 
-function setLightMode() {
-  document.body.classList.remove("dark");
-  closeMenu();
+function setDarkMode(){
+document.body.classList.add("dark");
+closeMenu();
 }
+
+function setLightMode(){
+document.body.classList.remove("dark");
+closeMenu();
+}
+
 
 /* ================= HOME ================= */
 
-async function loadHome() {
-  currentPage = { type: "home" };
+async function loadHome(){
 
-  document.getElementById("pageTitle").innerText = "StudyBooks";
+currentPage = { type:"home" };
 
-  document.querySelector(".menu-btn").style.display = "flex";
-  document.getElementById("backBtn").style.display = "none";
+document.getElementById("pageTitle").innerText = "StudyBooks";
 
-  let html = "<div class='grid'>";
+document.querySelector(".menu-btn").style.display = "flex";
+document.getElementById("backBtn").style.display = "none";
 
-  const snapshot = await db.collection("sections").get();
+let html = "<div class='grid'>";
 
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    const sectionName = data.name || "No Name";
+const snapshot = await db.collection("sections").get();
 
-    html += `
-      <div class="card" onclick="openSection('${doc.id}','${sectionName}')">
-        <span class="icon material-icons">menu_book</span>
-        ${sectionName}
-      </div>
-    `;
-  });
+snapshot.forEach(doc => {
 
-  html += "</div>";
+const data = doc.data();
+const sectionName = data.name || "No Name";
 
-  document.getElementById("content").innerHTML = html;
+html += `
+<div class="card"
+onclick="openSection('${doc.id}','${sectionName}')">
+
+<span class="icon material-icons">menu_book</span>
+
+${sectionName}
+
+</div>
+`;
+
+});
+
+html += "</div>";
+
+document.getElementById("content").innerHTML = html;
+
 }
+
 
 /* ================= SECTION ================= */
 
-async function openSection(sectionId, sectionName) {
-  navigationStack.push({ ...currentPage });
+async function openSection(sectionId,sectionName,save=true){
 
-  currentPage = {
-    type: "section",
-    sectionId,
-    sectionName
-  };
-
-  document.getElementById("pageTitle").innerText = sectionName;
-
-  document.querySelector(".menu-btn").style.display = "none";
-  document.getElementById("backBtn").style.display = "flex";
-
-  closeMenu();
-
-  let html = "<div class='grid'>";
-
-  const snapshot = await db
-    .collection("sections")
-    .doc(sectionId)
-    .collection("classes")
-    .get();
-
-  snapshot.forEach(doc => {
-    const data = doc.data();
-
-    html += `
-      <div class="card" onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
-        ${data.name}
-      </div>
-    `;
-  });
-
-  html += "</div>";
-
-  document.getElementById("content").innerHTML = html;
+if(save){
+navigationStack.push({...currentPage});
 }
+
+currentPage={
+type:"section",
+sectionId,
+sectionName
+};
+
+document.getElementById("pageTitle").innerText = sectionName;
+
+document.querySelector(".menu-btn").style.display = "none";
+document.getElementById("backBtn").style.display = "flex";
+
+closeMenu();
+
+let html="<div class='grid'>";
+
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.get();
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+html += `
+<div class="card"
+onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
+${data.name}
+</div>
+`;
+
+});
+
+html+="</div>";
+
+document.getElementById("content").innerHTML = html;
+
+}
+
 
 /* ================= CLASS ================= */
 
-async function openClass(sectionId, classId, className) {
-  navigationStack.push({ ...currentPage });
+async function openClass(sectionId,classId,className,save=true){
 
-  currentPage = {
-    type: "class",
-    sectionId,
-    classId,
-    className
-  };
-
-  document.getElementById("pageTitle").innerText = className;
-
-  let html = "<div class='grid'>";
-
-  const snapshot = await db
-    .collection("sections")
-    .doc(sectionId)
-    .collection("classes")
-    .doc(classId)
-    .collection("subjects")
-    .get();
-
-  snapshot.forEach(doc => {
-    const data = doc.data();
-
-    html += `
-      <div class="card" onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
-        ${data.name}
-      </div>
-    `;
-  });
-
-  html += "</div>";
-
-  document.getElementById("content").innerHTML = html;
+if(save){
+navigationStack.push({...currentPage});
 }
+
+currentPage={
+type:"class",
+sectionId,
+classId,
+className
+};
+
+document.getElementById("pageTitle").innerText = className;
+
+let html="<div class='grid'>";
+
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.doc(classId)
+.collection("subjects")
+.get();
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+html += `
+<div class="card"
+onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
+${data.name}
+</div>
+`;
+
+});
+
+html+="</div>";
+
+document.getElementById("content").innerHTML = html;
+
+}
+
 
 /* ================= SUBJECT ================= */
 
-async function openSubject(sectionId, classId, subjectId, subjectName) {
-  navigationStack.push({ ...currentPage });
+async function openSubject(sectionId,classId,subjectId,subjectName,save=true){
 
-  currentPage = {
-    type: "subject",
-    sectionId,
-    classId,
-    subjectId,
-    subjectName
-  };
-
-  document.getElementById("pageTitle").innerText = subjectName;
-
-  let html = "<div class='grid'>";
-
-  const snapshot = await db
-    .collection("sections")
-    .doc(sectionId)
-    .collection("classes")
-    .doc(classId)
-    .collection("subjects")
-    .doc(subjectId)
-    .collection("chapters")
-    .get();
-
-  snapshot.forEach(doc => {
-    const data = doc.data();
-
-    html += `
-      <div class="card">
-        ${data.name}
-      </div>
-    `;
-  });
-
-  html += "</div>";
-
-  document.getElementById("content").innerHTML = html;
+if(save){
+navigationStack.push({...currentPage});
 }
+
+currentPage={
+type:"subject",
+sectionId,
+classId,
+subjectId,
+subjectName
+};
+
+document.getElementById("pageTitle").innerText = subjectName;
+
+let html="<div class='grid'>";
+
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.doc(classId)
+.collection("subjects")
+.doc(subjectId)
+.collection("chapters")
+.get();
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+html += `
+<div class="card">
+${data.name}
+</div>
+`;
+
+});
+
+html+="</div>";
+
+document.getElementById("content").innerHTML = html;
+
+}
+
 
 /* ================= BACK ================= */
 
-function goBack() {
-  if (navigationStack.length > 0) {
-    currentPage = navigationStack.pop();
-    renderPage();
-  } else {
-    loadHome();
-  }
+function goBack(){
+
+if(navigationStack.length > 0){
+
+currentPage = navigationStack.pop();
+renderPage();
+
+}else{
+
+loadHome();
+
 }
 
-/* ================= PAGE RENDER ================= */
-
-async function renderPage() {
-  if (currentPage.type === "home") {
-    loadHome();
-  }
-
-  if (currentPage.type === "section") {
-    openSection(currentPage.sectionId, currentPage.sectionName);
-  }
-
-  if (currentPage.type === "class") {
-    openClass(
-      currentPage.sectionId,
-      currentPage.classId,
-      currentPage.className
-    );
-  }
-
-  if (currentPage.type === "subject") {
-    openSubject(
-      currentPage.sectionId,
-      currentPage.classId,
-      currentPage.subjectId,
-      currentPage.subjectName
-    );
-  }
 }
+
+
+/* ================= RENDER ================= */
+
+async function renderPage(){
+
+if(currentPage.type==="home"){
+loadHome();
+}
+
+if(currentPage.type==="section"){
+openSection(currentPage.sectionId,currentPage.sectionName,false);
+}
+
+if(currentPage.type==="class"){
+openClass(
+currentPage.sectionId,
+currentPage.classId,
+currentPage.className,
+false
+);
+}
+
+if(currentPage.type==="subject"){
+openSubject(
+currentPage.sectionId,
+currentPage.classId,
+currentPage.subjectId,
+currentPage.subjectName,
+false
+);
+}
+
+}
+
 
 /* ================= START ================= */
 
