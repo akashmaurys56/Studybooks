@@ -38,6 +38,7 @@ cursor:pointer;
 
 </div><script>
 
+
 function login(){
 
 let pass = document.getElementById("password").value.trim();
@@ -45,7 +46,6 @@ let pass = document.getElementById("password").value.trim();
 if(pass === "1234"){
 
 localStorage.setItem("admin","true");
-
 window.location.href="admin.html";
 
 }else{
@@ -55,5 +55,6 @@ alert("Wrong Password");
 }
 
 }
+
 
 </script></body></html>
