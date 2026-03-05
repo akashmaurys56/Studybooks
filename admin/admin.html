@@ -1,17 +1,13 @@
 <!DOCTYPE html><html>
-<head>
-<title>StudyBooks Admin</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script><script src="admin.js" defer></script></head><body><script>
+<head><title>StudyBooks Admin Panel</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script></head><body><script>
 
-if(localStorage.getItem("admin") !== "true"){
-
-window.location.href = "admin-login.html";
-
+if(localStorage.getItem("admin")!=="true"){
+window.location.href="admin-login.html";
 }
 
-</script><div class="header">StudyBooks Admin</div><div class="container"><h3>Add Section</h3>
-<input id="sectionName" placeholder="Section name">
-<button onclick="addSection()">Add Section</button><h3>Add Class</h3>
-<select id="classSection"></select>
-<input id="className" placeholder="Class name">
-<button onclick="addClass()">Add Class</button></div></body>
+</script><div class="header">StudyBooks Admin Panel
+
+<button onclick="logout()">Logout</button>
+
+</div><div class="cards"><div class="card" onclick="addSection()">Add Section</div><div class="card" onclick="addClass()">Add Class</div><div class="card" onclick="addSubject()">Add Subject</div><div class="card" onclick="addChapter()">Add Chapter</div></div><script src="admin.js"></script></body>
 </html>
