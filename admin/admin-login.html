@@ -1,49 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Admin Login</title>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
-<script src="../firebase.js"></script>
-
-</head>
 
 <body>
 
 <h2>Admin Login</h2>
 
-<button onclick="login()">Login with Google</button>
+<input type="password" id="pass" placeholder="Enter password">
+
+<button onclick="login()">Login</button>
 
 <script>
 
-const ADMIN_EMAIL = "mauryanumesh195@gmail.com";
-
 function login(){
 
-var provider = new firebase.auth.GoogleAuthProvider();
+let pass = document.getElementById("pass").value;
 
-firebase.auth().signInWithPopup(provider)
-.then((result)=>{
-
-if(result.user.email === ADMIN_EMAIL){
+if(pass === "studybooks123"){
 
 localStorage.setItem("admin","true");
+
 window.location.href="admin.html";
 
 }else{
 
-alert("Access denied");
-firebase.auth().signOut();
+alert("Wrong password");
 
 }
-
-});
 
 }
 
 </script>
 
 </body>
+
 </html>
