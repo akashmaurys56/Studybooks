@@ -3,7 +3,7 @@
 
 <head>
 
-<title>StudyBooks Admin Panel</title>
+<title>Admin Panel</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -27,23 +27,18 @@ font-size:22px;
 
 .container{
 padding:20px;
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:20px;
 }
 
-.card{
-background:white;
-padding:25px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-text-align:center;
-cursor:pointer;
+button{
+display:block;
+width:100%;
+padding:15px;
+margin:10px 0;
 font-size:18px;
-}
-
-.card:hover{
-background:#f0f0f0;
+border:none;
+background:#2196F3;
+color:white;
+border-radius:6px;
 }
 
 </style>
@@ -58,29 +53,22 @@ StudyBooks Admin Panel
 
 <div class="container">
 
-<div class="card" onclick="addSection()">
-➕ Add Section
-</div>
+<button onclick="addSection()">Add Section</button>
 
-<div class="card" onclick="addClass()">
-📚 Add Class
-</div>
+<button onclick="addClass()">Add Class</button>
 
-<div class="card" onclick="addSubject()">
-📖 Add Subject
-</div>
+<button onclick="addSubject()">Add Subject</button>
 
-<div class="card" onclick="addChapter()">
-📄 Add Chapter
-</div>
+<button onclick="addChapter()">Add Chapter</button>
 
 </div>
-
 
 <script>
 
 var db = firebase.firestore();
 
+
+// ADD SECTION
 
 function addSection(){
 
@@ -97,35 +85,18 @@ alert("Section Added");
 }
 
 
-async function addClass(){
+// ADD CLASS
 
-const snap = await db.collection("sections").get();
+function addClass(){
 
-let sections=[];
-
-snap.forEach(doc=>{
-sections.push({
-id:doc.id,
-name:doc.data().name
-});
-});
-
-let list = sections.map((s,i)=>`${i+1}. ${s.name}`).join("\n");
-
-let index = prompt("Select Section:\n"+list);
-
-if(!index) return;
-
-let section = sections[index-1];
+let section = prompt("Enter Section Name");
 
 let className = prompt("Enter Class Name");
 
-if(!className) return;
+if(!section || !className) return;
 
-db.collection("sections")
-.doc(section.id)
-.collection("classes")
-.add({
+db.collection("classes").add({
+section:section,
 name:className
 });
 
@@ -134,50 +105,22 @@ alert("Class Added");
 }
 
 
-async function addSubject(){
+// ADD SUBJECT
 
-const sectionSnap = await db.collection("sections").get();
+function addSubject(){
 
-let sections=[];
+let section = prompt("Enter Section Name");
 
-sectionSnap.forEach(doc=>{
-sections.push({id:doc.id,name:doc.data().name});
-});
+let className = prompt("Enter Class Name");
 
-let sList = sections.map((s,i)=>`${i+1}. ${s.name}`).join("\n");
+let subject = prompt("Enter Subject Name");
 
-let sIndex = prompt("Select Section:\n"+sList);
+if(!section || !className || !subject) return;
 
-let section = sections[sIndex-1];
-
-const classSnap = await db.collection("sections")
-.doc(section.id)
-.collection("classes")
-.get();
-
-let classes=[];
-
-classSnap.forEach(doc=>{
-classes.push({id:doc.id,name:doc.data().name});
-});
-
-let cList = classes.map((c,i)=>`${i+1}. ${c.name}`).join("\n");
-
-let cIndex = prompt("Select Class:\n"+cList);
-
-let classObj = classes[cIndex-1];
-
-let subjectName = prompt("Enter Subject Name");
-
-if(!subjectName) return;
-
-db.collection("sections")
-.doc(section.id)
-.collection("classes")
-.doc(classObj.id)
-.collection("subjects")
-.add({
-name:subjectName
+db.collection("subjects").add({
+section:section,
+class:className,
+name:subject
 });
 
 alert("Subject Added");
@@ -185,73 +128,25 @@ alert("Subject Added");
 }
 
 
-async function addChapter(){
+// ADD CHAPTER
 
-const sectionSnap = await db.collection("sections").get();
+function addChapter(){
 
-let sections=[];
+let section = prompt("Enter Section Name");
 
-sectionSnap.forEach(doc=>{
-sections.push({id:doc.id,name:doc.data().name});
-});
+let className = prompt("Enter Class Name");
 
-let sList = sections.map((s,i)=>`${i+1}. ${s.name}`).join("\n");
+let subject = prompt("Enter Subject Name");
 
-let sIndex = prompt("Select Section:\n"+sList);
+let chapter = prompt("Enter Chapter Name");
 
-let section = sections[sIndex-1];
+if(!section || !className || !subject || !chapter) return;
 
-
-const classSnap = await db.collection("sections")
-.doc(section.id)
-.collection("classes")
-.get();
-
-let classes=[];
-
-classSnap.forEach(doc=>{
-classes.push({id:doc.id,name:doc.data().name});
-});
-
-let cList = classes.map((c,i)=>`${i+1}. ${c.name}`).join("\n");
-
-let cIndex = prompt("Select Class:\n"+cList);
-
-let classObj = classes[cIndex-1];
-
-
-const subjectSnap = await db.collection("sections")
-.doc(section.id)
-.collection("classes")
-.doc(classObj.id)
-.collection("subjects")
-.get();
-
-let subjects=[];
-
-subjectSnap.forEach(doc=>{
-subjects.push({id:doc.id,name:doc.data().name});
-});
-
-let subList = subjects.map((s,i)=>`${i+1}. ${s.name}`).join("\n");
-
-let subIndex = prompt("Select Subject:\n"+subList);
-
-let subject = subjects[subIndex-1];
-
-let chapterName = prompt("Enter Chapter Name");
-
-if(!chapterName) return;
-
-db.collection("sections")
-.doc(section.id)
-.collection("classes")
-.doc(classObj.id)
-.collection("subjects")
-.doc(subject.id)
-.collection("chapters")
-.add({
-name:chapterName
+db.collection("chapters").add({
+section:section,
+class:className,
+subject:subject,
+name:chapter
 });
 
 alert("Chapter Added");
