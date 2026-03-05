@@ -29,7 +29,7 @@ font-weight:bold;
 .container{
 padding:20px;
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
 gap:20px;
 }
 
@@ -45,37 +45,51 @@ transition:0.2s;
 }
 
 .card:hover{
-transform:translateY(-3px);
+transform:translateY(-4px);
 box-shadow:0 10px 20px rgba(0,0,0,0.15);
+}
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.4);
+display:none;
+align-items:center;
+justify-content:center;
 }
 
 .formBox{
 background:white;
-margin:20px;
-padding:20px;
+padding:25px;
 border-radius:10px;
-box-shadow:0 6px 15px rgba(0,0,0,0.1);
+width:300px;
 }
 
 input{
 width:100%;
-padding:12px;
+padding:10px;
 margin-top:10px;
 border:1px solid #ddd;
 border-radius:6px;
-font-size:16px;
 }
 
 button{
 margin-top:15px;
-padding:12px;
+padding:10px;
 width:100%;
 border:none;
 background:#4CAF50;
 color:white;
-font-size:16px;
 border-radius:6px;
 cursor:pointer;
+}
+
+.close{
+background:#f44336;
+margin-top:8px;
 }
 
 </style>
@@ -90,65 +104,52 @@ StudyBooks Admin Panel
 
 <div class="container">
 
-<div class="card" onclick="showSection()">➕ Add Section</div>
+<div class="card" onclick="openForm('section')">➕ Add Section</div>
 
-<div class="card" onclick="showClass()">📚 Add Class</div>
+<div class="card" onclick="openForm('class')">📚 Add Class</div>
 
-<div class="card" onclick="showSubject()">📖 Add Subject</div>
+<div class="card" onclick="openForm('subject')">📖 Add Subject</div>
 
-<div class="card" onclick="showChapter()">📄 Add Chapter</div>
+<div class="card" onclick="openForm('chapter')">📄 Add Chapter</div>
 
 </div>
 
-<div id="formArea"></div>
+
+<div class="modal" id="modal">
+
+<div class="formBox" id="formContent"></div>
+
+</div>
+
 
 <script>
 
 var db = firebase.firestore();
 
 
-function showSection(){
+function openForm(type){
 
-document.getElementById("formArea").innerHTML = `
+let html="";
 
-<div class="formBox">
+if(type==="section"){
+
+html=`
 
 <h3>Add Section</h3>
 
 <input id="sectionName" placeholder="Section Name">
 
-<button onclick="addSection()">Add Section</button>
+<button onclick="addSection()">Save</button>
 
-</div>
+<button class="close" onclick="closeForm()">Cancel</button>
 
 `;
 
 }
 
+if(type==="class"){
 
-function addSection(){
-
-let name=document.getElementById("sectionName").value;
-
-if(!name) return alert("Enter section");
-
-db.collection("sections").add({
-
-name:name
-
-});
-
-alert("Section Added");
-
-}
-
-
-
-function showClass(){
-
-document.getElementById("formArea").innerHTML = `
-
-<div class="formBox">
+html=`
 
 <h3>Add Class</h3>
 
@@ -156,41 +157,17 @@ document.getElementById("formArea").innerHTML = `
 
 <input id="className" placeholder="Class Name">
 
-<button onclick="addClass()">Add Class</button>
+<button onclick="addClass()">Save</button>
 
-</div>
+<button class="close" onclick="closeForm()">Cancel</button>
 
 `;
 
 }
 
+if(type==="subject"){
 
-function addClass(){
-
-let section=document.getElementById("classSection").value;
-
-let name=document.getElementById("className").value;
-
-if(!section || !name) return alert("Fill all fields");
-
-db.collection("classes").add({
-
-section:section,
-name:name
-
-});
-
-alert("Class Added");
-
-}
-
-
-
-function showSubject(){
-
-document.getElementById("formArea").innerHTML = `
-
-<div class="formBox">
+html=`
 
 <h3>Add Subject</h3>
 
@@ -200,44 +177,17 @@ document.getElementById("formArea").innerHTML = `
 
 <input id="subjectName" placeholder="Subject Name">
 
-<button onclick="addSubject()">Add Subject</button>
+<button onclick="addSubject()">Save</button>
 
-</div>
+<button class="close" onclick="closeForm()">Cancel</button>
 
 `;
 
 }
 
+if(type==="chapter"){
 
-function addSubject(){
-
-let section=document.getElementById("subjectSection").value;
-
-let className=document.getElementById("subjectClass").value;
-
-let name=document.getElementById("subjectName").value;
-
-if(!section || !className || !name) return alert("Fill all fields");
-
-db.collection("subjects").add({
-
-section:section,
-class:className,
-name:name
-
-});
-
-alert("Subject Added");
-
-}
-
-
-
-function showChapter(){
-
-document.getElementById("formArea").innerHTML = `
-
-<div class="formBox">
+html=`
 
 <h3>Add Chapter</h3>
 
@@ -249,13 +199,89 @@ document.getElementById("formArea").innerHTML = `
 
 <input id="chapterName" placeholder="Chapter Name">
 
-<button onclick="addChapter()">Add Chapter</button>
+<button onclick="addChapter()">Save</button>
 
-</div>
+<button class="close" onclick="closeForm()">Cancel</button>
 
 `;
 
 }
+
+document.getElementById("formContent").innerHTML=html;
+
+document.getElementById("modal").style.display="flex";
+
+}
+
+
+function closeForm(){
+
+document.getElementById("modal").style.display="none";
+
+}
+
+
+
+function addSection(){
+
+let name=document.getElementById("sectionName").value;
+
+db.collection("sections").add({name:name});
+
+alert("Section Added");
+
+closeForm();
+
+}
+
+
+
+function addClass(){
+
+let section=document.getElementById("classSection").value;
+
+let name=document.getElementById("className").value;
+
+db.collection("classes").add({
+
+section:section,
+
+name:name
+
+});
+
+alert("Class Added");
+
+closeForm();
+
+}
+
+
+
+function addSubject(){
+
+let section=document.getElementById("subjectSection").value;
+
+let className=document.getElementById("subjectClass").value;
+
+let name=document.getElementById("subjectName").value;
+
+db.collection("subjects").add({
+
+section:section,
+
+class:className,
+
+name:name
+
+});
+
+alert("Subject Added");
+
+closeForm();
+
+}
+
 
 
 function addChapter(){
@@ -268,24 +294,21 @@ let subject=document.getElementById("chapterSubject").value;
 
 let chapter=document.getElementById("chapterName").value;
 
-if(!section || !className || !subject || !chapter){
-
-alert("Fill all fields");
-
-return;
-
-}
-
 db.collection("chapters").add({
 
 section:section,
+
 class:className,
+
 subject:subject,
+
 name:chapter
 
 });
 
 alert("Chapter Added");
+
+closeForm();
 
 }
 
