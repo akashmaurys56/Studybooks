@@ -43,6 +43,8 @@ alert("Chapter Added");
 
 function addSection(){
 
+closeAllPopups();
+
 document.getElementById("sectionPopup").style.display="flex";
 
 }
@@ -78,6 +80,8 @@ document.getElementById("sectionPopup").style.display="none";
 
 function addClass(){
 
+closeAllPopups();
+
 document.getElementById("classPopup").style.display="flex";
 
 loadSections("classSectionSelect");
@@ -107,6 +111,8 @@ alert("Class Added");
 }
 
 function addSubject(){
+
+closeAllPopups();
 
 document.getElementById("subjectPopup").style.display="flex";
 
@@ -140,6 +146,8 @@ alert("Subject Added");
 
 function addChapter(){
 
+closeAllPopups();
+
 document.getElementById("chapterPopup").style.display="flex";
 
 loadSections("chapterSectionSelect");
@@ -169,5 +177,14 @@ name:name
 closeChapterPopup();
 
 alert("Chapter Added");
+
+}
+
+function closeAllPopups(){
+
+document.getElementById("sectionPopup").style.display="none";
+document.getElementById("classPopup").style.display="none";
+document.getElementById("subjectPopup").style.display="none";
+document.getElementById("chapterPopup").style.display="none";
 
 }
