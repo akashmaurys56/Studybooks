@@ -1,49 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Admin Panel</title>
-
-<link rel="stylesheet" href="admin.css">
-
-</head>
-<script>
-
-if(localStorage.getItem("admin") !== "true"){
-window.location.href = "admin-login.html";
-}
-
-</script>
-<body>
-
-<script>
-
-if(localStorage.getItem("admin")!=="true"){
-window.location.href="admin-login.html";
-}
-
-</script>
-
-<div class="header">
-
+<!DOCTYPE html><html><head><title>StudyBooks Admin</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script></head><body><div class="header">
 StudyBooks Admin Panel
+</div><div class="container"><h3>Add Section</h3><input id="sectionName" placeholder="Section Name">
+<button onclick="addSection()">Add</button><h3>Add Class</h3><select id="classSection"></select>
+<input id="className" placeholder="Class Name">
+<button onclick="addClass()">Add</button>
 
-<button onclick="logout()">Logout</button>
+<h3>Add Subject</h3><select id="subjectSection"></select>
+<select id="subjectClass"></select>
+<input id="subjectName" placeholder="Subject Name">
+<button onclick="addSubject()">Add</button>
 
-</div>
+<h3>Add Chapter</h3><select id="chapterSection"></select>
+<select id="chapterClass"></select>
+<select id="chapterSubject"></select>
+<input id="chapterName" placeholder="Chapter Name">
+<button onclick="addChapter()">Add</button>
 
-<div class="cards">
-
-<div class="card">Add Section</div>
-
-<div class="card">Add Class</div>
-
-<div class="card">Add Subject</div>
-
-<div class="card">Add Chapter</div>
-
-</div>
-
-<script src="admin.js"></script>
-
-</body>
-</html>
+</div><script src="admin.js"></script></body></html>
