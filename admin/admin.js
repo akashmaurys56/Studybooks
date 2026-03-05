@@ -1,54 +1,38 @@
-var db = firebase.firestore();
+// Sample Data
+const users = [
+    { id: 1, name: "Ali Khan", role: "Editor" },
+    { id: 2, name: "Sara Ahmed", role: "Admin" },
+    { id: 3, name: "Zain Malik", role: "Subscriber" }
+];
 
+// 1. Function to Load Table Data
+function loadTableData() {
+    const tableBody = document.getElementById('table-body');
+    tableBody.innerHTML = ""; // Purana data clear karein
 
-async function addSection(){
-
-let name = prompt("Enter Section Name");
-
-if(!name) return;
-
-await db.collection("sections").add({
-name:name
-});
-
-alert("Section Added");
-
+    users.forEach(user => {
+        let row = `<tr>
+            <td>${user.id}</td>
+            <td>${user.name}</td>
+            <td>${user.role}</td>
+            <td><button onclick="deleteUser(${user.id})">Delete</button></td>
+        </tr>`;
+        tableBody.innerHTML += row;
+    });
 }
 
-
-async function showSections(){
-
-const snap = await db.collection("sections").get();
-
-let html = "";
-
-snap.forEach(doc=>{
-
-html += `
-<div class="item">
-
-${doc.data().name}
-
-<button onclick="deleteSection('${doc.id}')">
-Delete
-</button>
-
-</div>
-`;
-
-});
-
-document.getElementById("content").innerHTML = html;
-
+// 2. Function to Delete User (Logic)
+function deleteUser(id) {
+    alert("Deleting user with ID: " + id);
+    // Yahan tum API call ya array filtering ka logic daal sakte ho
 }
 
-
-async function deleteSection(id){
-
-if(!confirm("Delete section?")) return;
-
-await db.collection("sections").doc(id).delete();
-
-showSections();
-
+// 3. Navigation Logic
+function showSection(sectionName) {
+    document.getElementById('page-title').innerText = sectionName.toUpperCase();
+    console.log("Switching to: " + sectionName);
+    // Yahan tum content change karne ka logic add kar sakte ho
 }
+
+// Page load hote hi data dikhao
+window.onload = loadTableData;
