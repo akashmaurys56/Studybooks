@@ -80,3 +80,11 @@ alert("Saved");
 closeModal();
 
 }
+
+function logout(){
+
+localStorage.removeItem("admin");
+
+window.location.href="admin-login.html";
+
+}
