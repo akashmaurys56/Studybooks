@@ -123,6 +123,8 @@ StudyBooks Admin Panel
 
 <div class="formBox" id="formArea"></div>
 
+<div id="managerArea"></div>
+
 </div>
 
 
@@ -492,6 +494,34 @@ if(!confirm("Delete chapter?")) return;
 await db.collection("chapters").doc(id).delete();
 
 alert("Deleted");
+
+}
+
+async function openManager(){
+
+const snap = await db.collection("sections").get();
+
+let html = "<h3>Sections</h3>";
+
+snap.forEach(doc=>{
+
+const data = doc.data();
+
+html += `
+<div class="item">
+
+<b>${data.name}</b>
+
+<button onclick="deleteSection('${doc.id}')">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("managerArea").innerHTML = html;
 
 }
 
