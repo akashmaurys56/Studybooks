@@ -126,183 +126,113 @@ StudyBooks Admin Panel
 
 var db = firebase.firestore();
 
-function closeForm(){
 
-document.getElementById("modal").style.display="none";
+/* -------- SECTION -------- */
 
-}
-
-
-function openSection(){
-
-document.getElementById("modal").style.display="flex";
-
-document.getElementById("formArea").innerHTML=`
-
-<h3>Add Section</h3>
-
-<input id="sectionName" placeholder="Section Name">
-
-<button onclick="addSection()">Save</button>
-
-<button class="close" onclick="closeForm()">Cancel</button>
-
-`;
-
-}
-
-
-function addSection(){
+async function addSection(){
 
 let name=document.getElementById("sectionName").value;
 
-if(!name) return alert("Enter section");
+if(!name){
+alert("Enter section name");
+return;
+}
 
-db.collection("sections").add({
-
+await db.collection("sections").add({
 name:name
-
 });
 
 alert("Section Added");
 
-closeForm();
+loadSections();
 
 }
 
 
-
-async function loadSections(selectId){
+async function loadSections(){
 
 const snap=await db.collection("sections").get();
 
-let html=`<option value="">Select Section</option>`;
+let html="";
 
 snap.forEach(doc=>{
 
-html+=`<option value="${doc.data().name}">${doc.data().name}</option>`;
+let data=doc.data();
 
-});
+html+=`
 
-document.getElementById(selectId).innerHTML=html;
+<div class="item">
 
-}
+${data.name}
 
+<button onclick="deleteSection('${doc.id}')">
+Delete
+</button>
 
-async function loadClasses(section,selectId){
-
-const snap=await db.collection("classes")
-.where("section","==",section)
-.get();
-
-let html=`<option value="">Select Class</option>`;
-
-snap.forEach(doc=>{
-
-html+=`<option value="${doc.data().name}">${doc.data().name}</option>`;
-
-});
-
-document.getElementById(selectId).innerHTML=html;
-
-}
-
-
-async function loadSubjects(section,className,selectId){
-
-const snap=await db.collection("subjects")
-.where("section","==",section)
-.where("class","==",className)
-.get();
-
-let html=`<option value="">Select Subject</option>`;
-
-snap.forEach(doc=>{
-
-html+=`<option value="${doc.data().name}">${doc.data().name}</option>`;
-
-});
-
-document.getElementById(selectId).innerHTML=html;
-
-}
-
-
-
-function openClass(){
-
-document.getElementById("modal").style.display="flex";
-
-document.getElementById("formArea").innerHTML=`
-
-<h3>Add Class</h3>
-
-<select id="classSection"></select>
-
-<input id="className" placeholder="Class Name">
-
-<button onclick="addClass()">Save</button>
-
-<button class="close" onclick="closeForm()">Cancel</button>
+</div>
 
 `;
 
-loadSections("classSection");
+});
+
+document.getElementById("sectionList").innerHTML=html;
 
 }
 
 
-function addClass(){
+async function deleteSection(id){
+
+if(!confirm("Delete Section?")) return;
+
+await db.collection("sections").doc(id).delete();
+
+alert("Section Deleted");
+
+loadSections();
+
+}
+
+
+
+/* -------- CLASS -------- */
+
+async function addClass(){
 
 let section=document.getElementById("classSection").value;
 
 let name=document.getElementById("className").value;
 
-if(!section || !name) return alert("Fill fields");
+if(!section || !name){
+alert("Fill all fields");
+return;
+}
 
-db.collection("classes").add({
-
+await db.collection("classes").add({
 section:section,
-
 name:name
-
 });
 
 alert("Class Added");
 
-closeForm();
+}
+
+
+
+async function deleteClass(id){
+
+if(!confirm("Delete Class?")) return;
+
+await db.collection("classes").doc(id).delete();
+
+alert("Class Deleted");
 
 }
 
 
 
-function openSubject(){
+/* -------- SUBJECT -------- */
 
-document.getElementById("modal").style.display="flex";
-
-document.getElementById("formArea").innerHTML=`
-
-<h3>Add Subject</h3>
-
-<select id="subjectSection"
-onchange="loadClasses(this.value,'subjectClass')"></select>
-
-<select id="subjectClass"></select>
-
-<input id="subjectName" placeholder="Subject Name">
-
-<button onclick="addSubject()">Save</button>
-
-<button class="close" onclick="closeForm()">Cancel</button>
-
-`;
-
-loadSections("subjectSection");
-
-}
-
-
-function addSubject(){
+async function addSubject(){
 
 let section=document.getElementById("subjectSection").value;
 
@@ -310,60 +240,38 @@ let className=document.getElementById("subjectClass").value;
 
 let name=document.getElementById("subjectName").value;
 
-if(!section || !className || !name) return alert("Fill fields");
+if(!section || !className || !name){
+alert("Fill all fields");
+return;
+}
 
-db.collection("subjects").add({
-
+await db.collection("subjects").add({
 section:section,
-
 class:className,
-
 name:name
-
 });
 
 alert("Subject Added");
 
-closeForm();
+}
+
+
+
+async function deleteSubject(id){
+
+if(!confirm("Delete Subject?")) return;
+
+await db.collection("subjects").doc(id).delete();
+
+alert("Subject Deleted");
 
 }
 
 
 
-function openChapter(){
+/* -------- CHAPTER -------- */
 
-document.getElementById("modal").style.display="flex";
-
-document.getElementById("formArea").innerHTML=`
-
-<h3>Add Chapter</h3>
-
-<select id="chapterSection"
-onchange="loadClasses(this.value,'chapterClass')"></select>
-
-<select id="chapterClass"
-onchange="loadSubjects(
-document.getElementById('chapterSection').value,
-this.value,
-'chapterSubject'
-)"></select>
-
-<select id="chapterSubject"></select>
-
-<input id="chapterName" placeholder="Chapter Name">
-
-<button onclick="addChapter()">Save</button>
-
-<button class="close" onclick="closeForm()">Cancel</button>
-
-`;
-
-loadSections("chapterSection");
-
-}
-
-
-function addChapter(){
+async function addChapter(){
 
 let section=document.getElementById("chapterSection").value;
 
@@ -371,34 +279,35 @@ let className=document.getElementById("chapterClass").value;
 
 let subject=document.getElementById("chapterSubject").value;
 
-let chapter=document.getElementById("chapterName").value;
+let name=document.getElementById("chapterName").value;
 
-if(!section || !className || !subject || !chapter){
-
-alert("Fill fields");
-
+if(!section || !className || !subject || !name){
+alert("Fill all fields");
 return;
-
 }
 
-db.collection("chapters").add({
-
+await db.collection("chapters").add({
 section:section,
-
 class:className,
-
 subject:subject,
-
-name:chapter
-
+name:name
 });
 
 alert("Chapter Added");
 
-closeForm();
-
 }
 
+
+
+async function deleteChapter(id){
+
+if(!confirm("Delete Chapter?")) return;
+
+await db.collection("chapters").doc(id).delete();
+
+alert("Chapter Deleted");
+
+}
 </script>
 
 </body>
