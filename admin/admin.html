@@ -1,60 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyBooks Admin</title>
-    <link rel="stylesheet" href="admin.css">
-</head>
-<body>
-    <header class="admin-header">
-        <div class="header-content">
-            <h1>StudyBooks Admin Panel</h1>
-            <button id="logoutBtn">Logout</button>
-        </div>
-    </header>
+<!DOCTYPE html><html><head><title>StudyBooks Admin</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script></head><body><div class="header">
+StudyBooks Admin Panel
+</div><div class="cards"><div class="card" onclick="openModal('section')">
+➕ Add Section
+</div><div class="card" onclick="openModal('class')">
+🏫 Add Class
+</div><div class="card" onclick="openModal('subject')">
+📚 Add Subject
+</div><div class="card" onclick="openModal('chapter')">
+📄 Add Chapter
+</div></div><div id="content"></div><!-- MODAL --><div id="modal" class="modal"><div class="modal-box"><h3 id="modalTitle"></h3><input id="input1" placeholder="Name"><button onclick="saveData()">Save</button>
 
-    <div class="container">
-        <section class="form-section">
-            <h2>Add New Book / Note</h2>
-            <form id="addBookForm">
-                <input type="text" id="title" placeholder="Title (e.g., NCERT Class 10)" required>
-                <select id="category">
-                    <option value="Notes">Notes</option>
-                    <option value="Books">Books</option>
-                    <option value="Solutions">Solutions</option>
-                </select>
-                <select id="language">
-                    <option value="Hindi">Hindi</option>
-                    <option value="English">English</option>
-                </select>
-                <input type="url" id="fileUrl" placeholder="PDF Link / URL" required>
-                <button type="submit" id="submitBtn">Save Content</button>
-            </form>
-        </section>
+<button class="cancel" onclick="closeModal()">Cancel</button>
 
-        <section class="data-section">
-            <h2>Live Content on App</h2>
-            <table id="contentTable">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Lang</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="contentBody">
-                    </tbody>
-            </table>
-        </section>
-
-        <section class="user-section">
-            <h2>Registered Users (Gmail)</h2>
-            <ul id="userList"></ul>
-        </section>
-    </div>
-
-    <script type="module" src="admin.js"></script>
-</body>
-</html>
+</div></div><script src="admin.js"></script></body></html>
