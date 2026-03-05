@@ -26,17 +26,19 @@ function login(){
 var provider = new firebase.auth.GoogleAuthProvider();
 
 firebase.auth().signInWithPopup(provider)
-
 .then(function(result){
 
-if(result.user.email === ADMIN_EMAIL){
+let user = result.user;
+
+if(user.email === ADMIN_EMAIL){
 
 window.location.href="admin.html";
 
-}else{
+}
+
+else{
 
 alert("Access denied");
-
 firebase.auth().signOut();
 
 }
