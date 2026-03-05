@@ -39,13 +39,14 @@ border:none;
 
 function login(){
 
-let pass=document.getElementById("password").value;
+let pass = document.getElementById("password").value;
 
-if(pass==="akash123"){
+if(pass === "StudyBooks@2026"){   // अपना password
 
 localStorage.setItem("admin","true");
 
-window.location.href="admin/admin.html";
+// IMPORTANT: path सही
+window.location.href = "admin.html";
 
 }else{
 
