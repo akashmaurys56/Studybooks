@@ -3,12 +3,12 @@ import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https
 
 // 1. Firebase Configuration (Apna config yahan paste karein)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_ID",
-    appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyAW7iKFkof_hGxXtBNS8SA3VMfVM3O6QA0",
+  authDomain: "studybooks-423b6.firebaseapp.com",
+  projectId: "studybooks-423b6",
+  storageBucket: "studybooks-423b6.firebasestorage.app",
+  messagingSenderId: "542433930176",
+  appId: "1:542433930176:web:b9cb2970fc6370d8a27625"
 };
 
 const app = initializeApp(firebaseConfig);
