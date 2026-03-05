@@ -40,3 +40,35 @@ db.collection("chapters").add({name:name});
 
 alert("Chapter Added");
 }
+
+function addSection(){
+
+document.getElementById("sectionPopup").style.display="flex";
+
+}
+
+function closePopup(){
+
+document.getElementById("sectionPopup").style.display="none";
+
+}
+
+function saveSection(){
+
+let name=document.getElementById("sectionInput").value;
+
+if(!name){
+alert("Enter section name");
+return;
+}
+
+db.collection("sections").add({
+name:name
+});
+
+document.getElementById("sectionInput").value="";
+closePopup();
+
+alert("Section Added");
+
+}
