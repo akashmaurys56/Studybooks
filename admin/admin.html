@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Admin Panel</title>
+<title>StudyBooks Admin</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -14,7 +14,7 @@
 
 body{
 font-family:Arial;
-background:#f4f4f4;
+background:#f4f6fb;
 margin:0;
 }
 
@@ -23,22 +23,59 @@ background:#4CAF50;
 color:white;
 padding:20px;
 font-size:22px;
+font-weight:bold;
 }
 
 .container{
 padding:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 6px 15px rgba(0,0,0,0.1);
+text-align:center;
+cursor:pointer;
+font-size:16px;
+transition:0.2s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 20px rgba(0,0,0,0.15);
+}
+
+.formBox{
+background:white;
+margin:20px;
+padding:20px;
+border-radius:10px;
+box-shadow:0 6px 15px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:1px solid #ddd;
+border-radius:6px;
+font-size:16px;
 }
 
 button{
-display:block;
+margin-top:15px;
+padding:12px;
 width:100%;
-padding:15px;
-margin:10px 0;
-font-size:18px;
 border:none;
-background:#2196F3;
+background:#4CAF50;
 color:white;
+font-size:16px;
 border-radius:6px;
+cursor:pointer;
 }
 
 </style>
@@ -53,31 +90,52 @@ StudyBooks Admin Panel
 
 <div class="container">
 
-<button onclick="addSection()">Add Section</button>
+<div class="card" onclick="showSection()">➕ Add Section</div>
 
-<button onclick="addClass()">Add Class</button>
+<div class="card" onclick="showClass()">📚 Add Class</div>
 
-<button onclick="addSubject()">Add Subject</button>
+<div class="card" onclick="showSubject()">📖 Add Subject</div>
 
-<button onclick="addChapter()">Add Chapter</button>
+<div class="card" onclick="showChapter()">📄 Add Chapter</div>
 
 </div>
+
+<div id="formArea"></div>
 
 <script>
 
 var db = firebase.firestore();
 
 
-// ADD SECTION
+function showSection(){
+
+document.getElementById("formArea").innerHTML = `
+
+<div class="formBox">
+
+<h3>Add Section</h3>
+
+<input id="sectionName" placeholder="Section Name">
+
+<button onclick="addSection()">Add Section</button>
+
+</div>
+
+`;
+
+}
+
 
 function addSection(){
 
-let name = prompt("Enter Section Name");
+let name=document.getElementById("sectionName").value;
 
-if(!name) return;
+if(!name) return alert("Enter section");
 
 db.collection("sections").add({
+
 name:name
+
 });
 
 alert("Section Added");
@@ -85,19 +143,41 @@ alert("Section Added");
 }
 
 
-// ADD CLASS
+
+function showClass(){
+
+document.getElementById("formArea").innerHTML = `
+
+<div class="formBox">
+
+<h3>Add Class</h3>
+
+<input id="classSection" placeholder="Section Name">
+
+<input id="className" placeholder="Class Name">
+
+<button onclick="addClass()">Add Class</button>
+
+</div>
+
+`;
+
+}
+
 
 function addClass(){
 
-let section = prompt("Enter Section Name");
+let section=document.getElementById("classSection").value;
 
-let className = prompt("Enter Class Name");
+let name=document.getElementById("className").value;
 
-if(!section || !className) return;
+if(!section || !name) return alert("Fill all fields");
 
 db.collection("classes").add({
+
 section:section,
-name:className
+name:name
+
 });
 
 alert("Class Added");
@@ -105,22 +185,46 @@ alert("Class Added");
 }
 
 
-// ADD SUBJECT
+
+function showSubject(){
+
+document.getElementById("formArea").innerHTML = `
+
+<div class="formBox">
+
+<h3>Add Subject</h3>
+
+<input id="subjectSection" placeholder="Section Name">
+
+<input id="subjectClass" placeholder="Class Name">
+
+<input id="subjectName" placeholder="Subject Name">
+
+<button onclick="addSubject()">Add Subject</button>
+
+</div>
+
+`;
+
+}
+
 
 function addSubject(){
 
-let section = prompt("Enter Section Name");
+let section=document.getElementById("subjectSection").value;
 
-let className = prompt("Enter Class Name");
+let className=document.getElementById("subjectClass").value;
 
-let subject = prompt("Enter Subject Name");
+let name=document.getElementById("subjectName").value;
 
-if(!section || !className || !subject) return;
+if(!section || !className || !name) return alert("Fill all fields");
 
 db.collection("subjects").add({
+
 section:section,
 class:className,
-name:subject
+name:name
+
 });
 
 alert("Subject Added");
@@ -128,25 +232,57 @@ alert("Subject Added");
 }
 
 
-// ADD CHAPTER
+
+function showChapter(){
+
+document.getElementById("formArea").innerHTML = `
+
+<div class="formBox">
+
+<h3>Add Chapter</h3>
+
+<input id="chapterSection" placeholder="Section Name">
+
+<input id="chapterClass" placeholder="Class Name">
+
+<input id="chapterSubject" placeholder="Subject Name">
+
+<input id="chapterName" placeholder="Chapter Name">
+
+<button onclick="addChapter()">Add Chapter</button>
+
+</div>
+
+`;
+
+}
+
 
 function addChapter(){
 
-let section = prompt("Enter Section Name");
+let section=document.getElementById("chapterSection").value;
 
-let className = prompt("Enter Class Name");
+let className=document.getElementById("chapterClass").value;
 
-let subject = prompt("Enter Subject Name");
+let subject=document.getElementById("chapterSubject").value;
 
-let chapter = prompt("Enter Chapter Name");
+let chapter=document.getElementById("chapterName").value;
 
-if(!section || !className || !subject || !chapter) return;
+if(!section || !className || !subject || !chapter){
+
+alert("Fill all fields");
+
+return;
+
+}
 
 db.collection("chapters").add({
+
 section:section,
 class:className,
 subject:subject,
 name:chapter
+
 });
 
 alert("Chapter Added");
