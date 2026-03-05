@@ -3,36 +3,145 @@
 
 <head>
 
-<title>Admin Panel</title>
+<title>StudyBooks Admin Panel</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script src="../firebase.js"></script>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f4f4;
+margin:0;
+padding:0;
+}
+
+.header{
+background:#4CAF50;
+color:white;
+padding:20px;
+font-size:22px;
+}
+
+.container{
+padding:20px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+text-align:center;
+cursor:pointer;
+font-size:18px;
+}
+
+.card:hover{
+background:#f0f0f0;
+}
+
+</style>
 
 </head>
 
 <body>
 
-<h2>StudyBooks Admin Panel</h2>
+<div class="header">
+StudyBooks Admin Panel
+</div>
 
-<button onclick="logout()">Logout</button>
+<div class="container">
+
+<div class="card" onclick="addSection()">
+➕ Add Section
+</div>
+
+<div class="card" onclick="addClass()">
+📚 Add Class
+</div>
+
+<div class="card" onclick="addSubject()">
+📖 Add Subject
+</div>
+
+<div class="card" onclick="addChapter()">
+📄 Add Chapter
+</div>
+
+</div>
 
 <script>
 
-if(localStorage.getItem("admin") !== "true"){
+var db = firebase.firestore();
 
-window.location.href="admin-login.html";
+function addSection(){
+
+let name = prompt("Enter Section Name");
+
+if(!name) return;
+
+db.collection("sections").add({
+
+name:name
+
+});
+
+alert("Section added");
 
 }
 
-function logout(){
+function addClass(){
 
-localStorage.removeItem("admin");
+let name = prompt("Enter Class (ex: Class 9)");
 
-firebase.auth().signOut();
+if(!name) return;
 
-window.location.href="admin-login.html";
+db.collection("classes").add({
+
+name:name
+
+});
+
+alert("Class added");
+
+}
+
+function addSubject(){
+
+let name = prompt("Enter Subject");
+
+if(!name) return;
+
+db.collection("subjects").add({
+
+name:name
+
+});
+
+alert("Subject added");
+
+}
+
+function addChapter(){
+
+let name = prompt("Enter Chapter Name");
+
+if(!name) return;
+
+db.collection("chapters").add({
+
+name:name
+
+});
+
+alert("Chapter added");
 
 }
 
