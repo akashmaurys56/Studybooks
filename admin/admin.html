@@ -3,50 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>StudyBooks Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
 <body>
+    <header class="admin-header">
+        <div class="header-content">
+            <h1>StudyBooks Admin Panel</h1>
+            <button id="logoutBtn">Logout</button>
+        </div>
+    </header>
 
     <div class="container">
-        <nav class="sidebar">
-            <h2>Admin Logo</h2>
-            <ul>
-                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
-                <li><a href="#" onclick="showSection('users')">Users</a></li>
-                <li><a href="#" onclick="showSection('settings')">Settings</a></li>
-            </ul>
-        </nav>
+        <section class="form-section">
+            <h2>Add New Book / Note</h2>
+            <form id="addBookForm">
+                <input type="text" id="title" placeholder="Title (e.g., NCERT Class 10)" required>
+                <select id="category">
+                    <option value="Notes">Notes</option>
+                    <option value="Books">Books</option>
+                    <option value="Solutions">Solutions</option>
+                </select>
+                <select id="language">
+                    <option value="Hindi">Hindi</option>
+                    <option value="English">English</option>
+                </select>
+                <input type="url" id="fileUrl" placeholder="PDF Link / URL" required>
+                <button type="submit" id="submitBtn">Save Content</button>
+            </form>
+        </section>
 
-        <main class="main-content">
-            <header>
-                <h1 id="page-title">Dashboard</h1>
-                <button id="logout-btn">Logout</button>
-            </header>
+        <section class="data-section">
+            <h2>Live Content on App</h2>
+            <table id="contentTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Lang</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="contentBody">
+                    </tbody>
+            </table>
+        </section>
 
-            <section class="stats">
-                <div class="card"><h3>Total Users</h3> <p id="user-count">120</p></div>
-                <div class="card"><h3>Revenue</h3> <p>$5,000</p></div>
-                <div class="card"><h3>Active Tasks</h3> <p>15</p></div>
-            </section>
-
-            <section class="data-section">
-                <h3>Recent Activities</h3>
-                <table id="user-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Role</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        </tbody>
-                </table>
-            </section>
-        </main>
+        <section class="user-section">
+            <h2>Registered Users (Gmail)</h2>
+            <ul id="userList"></ul>
+        </section>
     </div>
 
-    <script src="admin.js"></script>
+    <script type="module" src="admin.js"></script>
 </body>
 </html>
