@@ -13,24 +13,25 @@ height:100vh;
 background:white;
 padding:20px;
 border-radius:8px;
-width:250px;
+width:260px;
 text-align:center;
 box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
 input{
 width:100%;
-padding:8px;
+padding:10px;
 margin-top:10px;
 }
 
 button{
 width:100%;
-padding:8px;
+padding:10px;
 margin-top:10px;
 background:#4CAF50;
 color:white;
 border:none;
+cursor:pointer;
 }
 
 </style></head><body><div class="box"><h3>Admin Login</h3><input type="password" id="password" placeholder="Enter Password"><button onclick="login()">Login</button>
@@ -39,14 +40,13 @@ border:none;
 
 function login(){
 
-let pass = document.getElementById("password").value;
+let pass = document.getElementById("password").value.trim();
 
-if(pass === "akash123"){   // अपना password
+if(pass === "StudyBooks@2026"){
 
 localStorage.setItem("admin","true");
 
-// IMPORTANT: path सही
-window.location.href = "admin.html";
+window.location.href="admin.html";
 
 }else{
 
