@@ -1,19 +1,9 @@
-<!DOCTYPE html><html><head><title>StudyBooks Admin</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script></head><body><div class="header">
-StudyBooks Admin Panel
-</div><div class="container"><h3>Add Section</h3><input id="sectionName" placeholder="Section Name">
-<button onclick="addSection()">Add</button><h3>Add Class</h3><select id="classSection"></select>
-<input id="className" placeholder="Class Name">
-<button onclick="addClass()">Add</button>
-
-<h3>Add Subject</h3><select id="subjectSection"></select>
-<select id="subjectClass"></select>
-<input id="subjectName" placeholder="Subject Name">
-<button onclick="addSubject()">Add</button>
-
-<h3>Add Chapter</h3><select id="chapterSection"></select>
-<select id="chapterClass"></select>
-<select id="chapterSubject"></select>
-<input id="chapterName" placeholder="Chapter Name">
-<button onclick="addChapter()">Add</button>
-
-</div><script src="admin.js"></script></body></html>
+<!DOCTYPE html><html>
+<head>
+<title>StudyBooks Admin</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script><script src="admin.js" defer></script></head><body><div class="header">StudyBooks Admin</div><div class="container"><h3>Add Section</h3>
+<input id="sectionName" placeholder="Section name">
+<button onclick="addSection()">Add Section</button><h3>Add Class</h3>
+<select id="classSection"></select>
+<input id="className" placeholder="Class name">
+<button onclick="addClass()">Add Class</button></div></body>
+</html>
