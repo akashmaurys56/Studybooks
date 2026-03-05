@@ -112,6 +112,10 @@ StudyBooks Admin Panel
 
 <div class="card" onclick="openChapter()">📄 Add Chapter</div>
 
+<div class="card" onclick="openManager()">
+📂 Manage Content
+</div>
+
 </div>
 
 
@@ -308,6 +312,190 @@ await db.collection("chapters").doc(id).delete();
 alert("Chapter Deleted");
 
 }
+
+async function openManager(){
+
+const snap = await db.collection("sections").get();
+
+let html = "<h3>Sections</h3>";
+
+snap.forEach(doc=>{
+
+const data = doc.data();
+
+html += `
+<div class="item">
+
+<b>${data.name}</b>
+
+<button onclick="openClasses('${data.name}')">
+Open
+</button>
+
+<button onclick="deleteSection('${doc.id}')">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("content").innerHTML = html;
+
+}
+
+async function openClasses(section){
+
+const snap = await db.collection("classes")
+.where("section","==",section)
+.get();
+
+let html = `<h3>${section} Classes</h3>`;
+
+snap.forEach(doc=>{
+
+const data = doc.data();
+
+html += `
+<div class="item">
+
+${data.name}
+
+<button onclick="openSubjects('${section}','${data.name}')">
+Open
+</button>
+
+<button onclick="deleteClass('${doc.id}')">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("content").innerHTML = html;
+
+}
+
+async function openSubjects(section,className){
+
+const snap = await db.collection("subjects")
+.where("section","==",section)
+.where("class","==",className)
+.get();
+
+let html = `<h3>${className} Subjects</h3>`;
+
+snap.forEach(doc=>{
+
+const data = doc.data();
+
+html += `
+<div class="item">
+
+${data.name}
+
+<button onclick="openChapters('${section}','${className}','${data.name}')">
+Open
+</button>
+
+<button onclick="deleteSubject('${doc.id}')">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("content").innerHTML = html;
+
+}
+
+async function openChapters(section,className,subject){
+
+const snap = await db.collection("chapters")
+.where("section","==",section)
+.where("class","==",className)
+.where("subject","==",subject)
+.get();
+
+let html = `<h3>${subject} Chapters</h3>`;
+
+snap.forEach(doc=>{
+
+const data = doc.data();
+
+html += `
+<div class="item">
+
+${data.name}
+
+<button onclick="deleteChapter('${doc.id}')">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("content").innerHTML = html;
+
+}
+
+async function deleteSection(id){
+
+if(!confirm("Delete section?")) return;
+
+await db.collection("sections").doc(id).delete();
+
+alert("Deleted");
+
+openManager();
+
+}
+
+
+async function deleteClass(id){
+
+if(!confirm("Delete class?")) return;
+
+await db.collection("classes").doc(id).delete();
+
+alert("Deleted");
+
+openManager();
+
+}
+
+
+async function deleteSubject(id){
+
+if(!confirm("Delete subject?")) return;
+
+await db.collection("subjects").doc(id).delete();
+
+alert("Deleted");
+
+openManager();
+
+}
+
+
+async function deleteChapter(id){
+
+if(!confirm("Delete chapter?")) return;
+
+await db.collection("chapters").doc(id).delete();
+
+alert("Deleted");
+
+}
+
+
 </script>
 
 </body>
