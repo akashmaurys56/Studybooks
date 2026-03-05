@@ -72,3 +72,6 @@ closePopup();
 alert("Section Added");
 
 }
+
+document.getElementById("sectionPopup").style.display="flex";
+document.getElementById("sectionPopup").style.display="none";
