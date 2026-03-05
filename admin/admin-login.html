@@ -1,36 +1,58 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html><head><title>Admin Login</title><style>
 
-<body>
+body{
+font-family:Arial;
+background:#f2f2f2;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
 
-<h2>Admin Login</h2>
+.box{
+background:white;
+padding:20px;
+border-radius:8px;
+width:250px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
 
-<input type="password" id="pass" placeholder="Enter password">
+input{
+width:100%;
+padding:8px;
+margin-top:10px;
+}
 
-<button onclick="login()">Login</button>
+button{
+width:100%;
+padding:8px;
+margin-top:10px;
+background:#4CAF50;
+color:white;
+border:none;
+}
 
-<script>
+</style></head><body><div class="box"><h3>Admin Login</h3><input type="password" id="password" placeholder="Enter Password"><button onclick="login()">Login</button>
+
+</div><script>
 
 function login(){
 
-let pass = document.getElementById("pass").value;
+let pass=document.getElementById("password").value;
 
-if(pass === "studybooks123"){
+if(pass==="akash123"){
 
 localStorage.setItem("admin","true");
 
-window.location.href="admin.html";
+window.location.href="admin/admin.html";
 
 }else{
 
-alert("Wrong password");
+alert("Wrong Password");
 
 }
 
 }
 
-</script>
-
-</body>
-
-</html>
+</script></body></html>
