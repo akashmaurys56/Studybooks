@@ -22,4 +22,12 @@ window.location.href="../admin-login.html";
 
 <button class="cancel" onclick="closeModal()">Cancel</button>
 
-</div></div><script src="admin.js"></script></body></html>
+</div></div><script src="admin.js"></script><script>
+
+if(localStorage.getItem("admin") !== "true"){
+
+window.location.href="admin-login.html";
+
+}
+
+</script></body></html>
