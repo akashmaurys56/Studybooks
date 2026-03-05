@@ -1,90 +1,103 @@
 var db = firebase.firestore();
 
-let currentType = "";
+window.onload = function(){
 
-function openModal(type){
+loadSections("classSection");
+loadSections("subjectSection");
+loadSections("chapterSection");
 
-currentType = type;
+};
 
-document.getElementById("modal").style.display = "flex";
+/* SECTION */
 
-document.getElementById("input1").value="";
+function addSection(){
 
-if(type=="section"){
-document.getElementById("modalTitle").innerText="Add Section";
-}
-
-if(type=="class"){
-document.getElementById("modalTitle").innerText="Add Class";
-}
-
-if(type=="subject"){
-document.getElementById("modalTitle").innerText="Add Subject";
-}
-
-if(type=="chapter"){
-document.getElementById("modalTitle").innerText="Add Chapter";
-}
-
-}
-
-function closeModal(){
-
-document.getElementById("modal").style.display="none";
-
-}
-
-function saveData(){
-
-let name = document.getElementById("input1").value;
+let name=document.getElementById("sectionName").value;
 
 if(!name){
-alert("Enter name");
+alert("Enter section name");
 return;
 }
-
-if(currentType=="section"){
 
 db.collection("sections").add({
 name:name
 });
 
+alert("Section Added");
+
 }
 
-if(currentType=="class"){
+/* CLASS */
+
+function addClass(){
+
+let section=document.getElementById("classSection").value;
+let name=document.getElementById("className").value;
 
 db.collection("classes").add({
+section:section,
 name:name
 });
 
+alert("Class Added");
+
 }
 
-if(currentType=="subject"){
+/* SUBJECT */
+
+function addSubject(){
+
+let section=document.getElementById("subjectSection").value;
+let className=document.getElementById("subjectClass").value;
+let name=document.getElementById("subjectName").value;
 
 db.collection("subjects").add({
+section:section,
+class:className,
 name:name
 });
 
+alert("Subject Added");
+
 }
 
-if(currentType=="chapter"){
+/* CHAPTER */
+
+function addChapter(){
+
+let section=document.getElementById("chapterSection").value;
+let className=document.getElementById("chapterClass").value;
+let subject=document.getElementById("chapterSubject").value;
+let name=document.getElementById("chapterName").value;
 
 db.collection("chapters").add({
+section:section,
+class:className,
+subject:subject,
 name:name
 });
 
-}
-
-alert("Saved");
-
-closeModal();
+alert("Chapter Added");
 
 }
 
-function logout(){
+/* LOAD SECTIONS */
 
-localStorage.removeItem("admin");
+function loadSections(selectId){
 
-window.location.href="admin-login.html";
+db.collection("sections").get().then(function(snap){
+
+let html="";
+
+snap.forEach(function(doc){
+
+html+=`<option value="${doc.data().name}">
+${doc.data().name}
+
+</option>`;});
+
+document.getElementById(selectId).innerHTML=html;
+
+});
 
 }
