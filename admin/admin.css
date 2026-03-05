@@ -1,0 +1,11 @@
+:root { --primary-green: #4CAF50; --bg-gray: #f9f9f9; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg-gray); margin: 0; }
+.admin-header { background: var(--primary-green); color: white; padding: 1rem 2rem; }
+.header-content { display: flex; justify-content: space-between; align-items: center; }
+.container { padding: 20px; max-width: 1000px; margin: auto; }
+section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+input, select, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+#submitBtn { background: var(--primary-green); color: white; font-weight: bold; cursor: pointer; border: none; }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+.delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
