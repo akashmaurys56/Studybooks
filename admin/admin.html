@@ -20,37 +20,19 @@
 
 <script>
 
-const ADMIN_EMAIL = "mauryanumesh195@gmail.com";
-
-firebase.auth().onAuthStateChanged(function(user){
-
-if(!user){
+if(localStorage.getItem("admin") !== "true"){
 
 window.location.href="admin-login.html";
 
-return;
-
 }
-
-if(user.email !== ADMIN_EMAIL){
-
-alert("Access denied");
-
-firebase.auth().signOut();
-
-window.location.href="../index.html";
-
-}
-
-});
 
 function logout(){
 
-firebase.auth().signOut().then(()=>{
+localStorage.removeItem("admin");
+
+firebase.auth().signOut();
 
 window.location.href="admin-login.html";
-
-});
 
 }
 
