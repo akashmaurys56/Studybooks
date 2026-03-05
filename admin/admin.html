@@ -1,9 +1,13 @@
-<!DOCTYPE html><html><head><title>StudyBooks Admin</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script><script>
-if(localStorage.getItem("admin")!=="true"){
+<!DOCTYPE html><html><head><title>StudyBooks Admin Panel</title><link rel="stylesheet" href="admin.css"><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script><script src="../firebase.js"></script></head><body><script>
+
+if(localStorage.getItem("admin") !== "true"){
+
 window.location.href="../admin-login.html";
+
 }
-</script></head><body><div class="header">
-StudyBooks Admin Panel
+
+</script><div class="header">StudyBooks Admin Panel
+
 </div><div class="cards"><div class="card" onclick="openModal('section')">
 ➕ Add Section
 </div><div class="card" onclick="openModal('class')">
@@ -12,7 +16,9 @@ StudyBooks Admin Panel
 📚 Add Subject
 </div><div class="card" onclick="openModal('chapter')">
 📄 Add Chapter
-</div></div><div id="content"></div><!-- MODAL --><div id="modal" class="modal"><div class="modal-box"><h3 id="modalTitle"></h3><input id="input1" placeholder="Name"><button onclick="saveData()">Save</button>
+</div><div class="card" onclick="openManager()">
+⚙ Manage Content
+</div></div><div id="content"></div><!-- MODAL --><div id="modal" class="modal"><div class="modal-box"><h3 id="modalTitle"></h3><input id="inputName" placeholder="Enter Name"><button onclick="saveData()">Save</button>
 
 <button class="cancel" onclick="closeModal()">Cancel</button>
 
