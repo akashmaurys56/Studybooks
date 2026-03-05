@@ -68,7 +68,7 @@ border-radius:10px;
 width:300px;
 }
 
-input{
+input,select{
 width:100%;
 padding:10px;
 margin-top:10px;
@@ -104,20 +104,20 @@ StudyBooks Admin Panel
 
 <div class="container">
 
-<div class="card" onclick="openForm('section')">➕ Add Section</div>
+<div class="card" onclick="openSection()">➕ Add Section</div>
 
-<div class="card" onclick="openForm('class')">📚 Add Class</div>
+<div class="card" onclick="openClass()">📚 Add Class</div>
 
-<div class="card" onclick="openForm('subject')">📖 Add Subject</div>
+<div class="card" onclick="openSubject()">📖 Add Subject</div>
 
-<div class="card" onclick="openForm('chapter')">📄 Add Chapter</div>
+<div class="card" onclick="openChapter()">📄 Add Chapter</div>
 
 </div>
 
 
 <div class="modal" id="modal">
 
-<div class="formBox" id="formContent"></div>
+<div class="formBox" id="formArea"></div>
 
 </div>
 
@@ -126,14 +126,18 @@ StudyBooks Admin Panel
 
 var db = firebase.firestore();
 
+function closeForm(){
 
-function openForm(type){
+document.getElementById("modal").style.display="none";
 
-let html="";
+}
 
-if(type==="section"){
 
-html=`
+function openSection(){
+
+document.getElementById("modal").style.display="flex";
+
+document.getElementById("formArea").innerHTML=`
 
 <h3>Add Section</h3>
 
@@ -147,86 +151,18 @@ html=`
 
 }
 
-if(type==="class"){
-
-html=`
-
-<h3>Add Class</h3>
-
-<input id="classSection" placeholder="Section Name">
-
-<input id="className" placeholder="Class Name">
-
-<button onclick="addClass()">Save</button>
-
-<button class="close" onclick="closeForm()">Cancel</button>
-
-`;
-
-}
-
-if(type==="subject"){
-
-html=`
-
-<h3>Add Subject</h3>
-
-<input id="subjectSection" placeholder="Section Name">
-
-<input id="subjectClass" placeholder="Class Name">
-
-<input id="subjectName" placeholder="Subject Name">
-
-<button onclick="addSubject()">Save</button>
-
-<button class="close" onclick="closeForm()">Cancel</button>
-
-`;
-
-}
-
-if(type==="chapter"){
-
-html=`
-
-<h3>Add Chapter</h3>
-
-<input id="chapterSection" placeholder="Section Name">
-
-<input id="chapterClass" placeholder="Class Name">
-
-<input id="chapterSubject" placeholder="Subject Name">
-
-<input id="chapterName" placeholder="Chapter Name">
-
-<button onclick="addChapter()">Save</button>
-
-<button class="close" onclick="closeForm()">Cancel</button>
-
-`;
-
-}
-
-document.getElementById("formContent").innerHTML=html;
-
-document.getElementById("modal").style.display="flex";
-
-}
-
-
-function closeForm(){
-
-document.getElementById("modal").style.display="none";
-
-}
-
-
 
 function addSection(){
 
 let name=document.getElementById("sectionName").value;
 
-db.collection("sections").add({name:name});
+if(!name) return alert("Enter section");
+
+db.collection("sections").add({
+
+name:name
+
+});
 
 alert("Section Added");
 
@@ -236,11 +172,93 @@ closeForm();
 
 
 
+async function loadSections(selectId){
+
+const snap=await db.collection("sections").get();
+
+let html=`<option value="">Select Section</option>`;
+
+snap.forEach(doc=>{
+
+html+=`<option value="${doc.data().name}">${doc.data().name}</option>`;
+
+});
+
+document.getElementById(selectId).innerHTML=html;
+
+}
+
+
+async function loadClasses(section,selectId){
+
+const snap=await db.collection("classes")
+.where("section","==",section)
+.get();
+
+let html=`<option value="">Select Class</option>`;
+
+snap.forEach(doc=>{
+
+html+=`<option value="${doc.data().name}">${doc.data().name}</option>`;
+
+});
+
+document.getElementById(selectId).innerHTML=html;
+
+}
+
+
+async function loadSubjects(section,className,selectId){
+
+const snap=await db.collection("subjects")
+.where("section","==",section)
+.where("class","==",className)
+.get();
+
+let html=`<option value="">Select Subject</option>`;
+
+snap.forEach(doc=>{
+
+html+=`<option value="${doc.data().name}">${doc.data().name}</option>`;
+
+});
+
+document.getElementById(selectId).innerHTML=html;
+
+}
+
+
+
+function openClass(){
+
+document.getElementById("modal").style.display="flex";
+
+document.getElementById("formArea").innerHTML=`
+
+<h3>Add Class</h3>
+
+<select id="classSection"></select>
+
+<input id="className" placeholder="Class Name">
+
+<button onclick="addClass()">Save</button>
+
+<button class="close" onclick="closeForm()">Cancel</button>
+
+`;
+
+loadSections("classSection");
+
+}
+
+
 function addClass(){
 
 let section=document.getElementById("classSection").value;
 
 let name=document.getElementById("className").value;
+
+if(!section || !name) return alert("Fill fields");
 
 db.collection("classes").add({
 
@@ -258,6 +276,32 @@ closeForm();
 
 
 
+function openSubject(){
+
+document.getElementById("modal").style.display="flex";
+
+document.getElementById("formArea").innerHTML=`
+
+<h3>Add Subject</h3>
+
+<select id="subjectSection"
+onchange="loadClasses(this.value,'subjectClass')"></select>
+
+<select id="subjectClass"></select>
+
+<input id="subjectName" placeholder="Subject Name">
+
+<button onclick="addSubject()">Save</button>
+
+<button class="close" onclick="closeForm()">Cancel</button>
+
+`;
+
+loadSections("subjectSection");
+
+}
+
+
 function addSubject(){
 
 let section=document.getElementById("subjectSection").value;
@@ -265,6 +309,8 @@ let section=document.getElementById("subjectSection").value;
 let className=document.getElementById("subjectClass").value;
 
 let name=document.getElementById("subjectName").value;
+
+if(!section || !className || !name) return alert("Fill fields");
 
 db.collection("subjects").add({
 
@@ -284,6 +330,39 @@ closeForm();
 
 
 
+function openChapter(){
+
+document.getElementById("modal").style.display="flex";
+
+document.getElementById("formArea").innerHTML=`
+
+<h3>Add Chapter</h3>
+
+<select id="chapterSection"
+onchange="loadClasses(this.value,'chapterClass')"></select>
+
+<select id="chapterClass"
+onchange="loadSubjects(
+document.getElementById('chapterSection').value,
+this.value,
+'chapterSubject'
+)"></select>
+
+<select id="chapterSubject"></select>
+
+<input id="chapterName" placeholder="Chapter Name">
+
+<button onclick="addChapter()">Save</button>
+
+<button class="close" onclick="closeForm()">Cancel</button>
+
+`;
+
+loadSections("chapterSection");
+
+}
+
+
 function addChapter(){
 
 let section=document.getElementById("chapterSection").value;
@@ -293,6 +372,14 @@ let className=document.getElementById("chapterClass").value;
 let subject=document.getElementById("chapterSubject").value;
 
 let chapter=document.getElementById("chapterName").value;
+
+if(!section || !className || !subject || !chapter){
+
+alert("Fill fields");
+
+return;
+
+}
 
 db.collection("chapters").add({
 
