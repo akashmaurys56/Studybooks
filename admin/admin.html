@@ -14,7 +14,7 @@
 
 <body>
 
-<h2>Admin Panel</h2>
+<h2>StudyBooks Admin Panel</h2>
 
 <button onclick="logout()">Logout</button>
 
@@ -27,7 +27,6 @@ firebase.auth().onAuthStateChanged(function(user){
 if(!user){
 
 window.location.href="admin-login.html";
-
 return;
 
 }
