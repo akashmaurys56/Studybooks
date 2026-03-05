@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <title>Admin Login</title>
@@ -26,9 +27,18 @@ function login(){
 var provider = new firebase.auth.GoogleAuthProvider();
 
 firebase.auth().signInWithPopup(provider)
-.then(function(result){
 
-let user = result.user;
+.catch(function(error){
+
+alert(error.message);
+
+});
+
+}
+
+firebase.auth().onAuthStateChanged(function(user){
+
+if(user){
 
 if(user.email === ADMIN_EMAIL){
 
@@ -39,15 +49,17 @@ window.location.href="admin.html";
 else{
 
 alert("Access denied");
+
 firebase.auth().signOut();
+
+}
 
 }
 
 });
 
-}
-
 </script>
 
 </body>
+
 </html>
