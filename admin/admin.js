@@ -1,66 +1,42 @@
 var db = firebase.firestore();
 
-window.onload = function(){
-loadSections();
-};
+function logout(){
+localStorage.removeItem("admin");
+window.location.href="admin-login.html";
+}
 
 function addSection(){
+let name=prompt("Section Name");
+if(!name)return;
 
-let name=document.getElementById("sectionName").value;
+db.collection("sections").add({name:name});
 
-if(!name){
-alert("Enter section name");
-return;
-}
-
-db.collection("sections").add({
-name:name
-}).then(function(){
-
-alert("Section added");
-
-loadSections();
-
-});
-
-}
-
-function loadSections(){
-
-db.collection("sections").get().then(function(snap){
-
-let html="";
-
-snap.forEach(function(doc){
-
-html+=`<option value="${doc.data().name}">
-${doc.data().name}
-
-</option>`;});
-
-document.getElementById("classSection").innerHTML=html;
-
-});
-
+alert("Section Added");
 }
 
 function addClass(){
+let name=prompt("Class Name");
+if(!name)return;
 
-let section=document.getElementById("classSection").value;
-let name=document.getElementById("className").value;
+db.collection("classes").add({name:name});
 
-if(!section || !name){
-alert("Fill all fields");
-return;
+alert("Class Added");
 }
 
-db.collection("classes").add({
-section:section,
-name:name
-}).then(function(){
+function addSubject(){
+let name=prompt("Subject Name");
+if(!name)return;
 
-alert("Class added");
+db.collection("subjects").add({name:name});
 
-});
+alert("Subject Added");
+}
 
+function addChapter(){
+let name=prompt("Chapter Name");
+if(!name)return;
+
+db.collection("chapters").add({name:name});
+
+alert("Chapter Added");
 }
