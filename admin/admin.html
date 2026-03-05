@@ -1,82 +1,52 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<title>Admin Panel</title>
-
-<style>
-
-body{
-font-family:Arial;
-background:#f2f2f2;
-margin:0;
-}
-
-.header{
-background:#4CAF50;
-color:white;
-padding:15px;
-font-size:22px;
-}
-
-.card{
-background:white;
-padding:15px;
-margin:10px;
-border-radius:8px;
-cursor:pointer;
-box-shadow:0 3px 8px rgba(0,0,0,0.1);
-}
-
-#content{
-padding:10px;
-}
-
-.item{
-background:white;
-padding:10px;
-margin:5px;
-border-radius:6px;
-display:flex;
-justify-content:space-between;
-}
-
-button{
-background:red;
-color:white;
-border:none;
-padding:5px 10px;
-border-radius:4px;
-}
-
-</style>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-<script src="../firebase.js"></script>
-
-</head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css"> </head>
 <body>
 
-<div class="header">
-StudyBooks Admin
-</div>
+    <div class="container">
+        <nav class="sidebar">
+            <h2>Admin Logo</h2>
+            <ul>
+                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('users')">Users</a></li>
+                <li><a href="#" onclick="showSection('settings')">Settings</a></li>
+            </ul>
+        </nav>
 
-<div class="card" onclick="addSection()">
-Add Section
-</div>
+        <main class="main-content">
+            <header>
+                <h1 id="page-title">Dashboard</h1>
+                <button id="logout-btn">Logout</button>
+            </header>
 
-<div class="card" onclick="showSections()">
-Manage Sections
-</div>
+            <section class="stats">
+                <div class="card"><h3>Total Users</h3> <p id="user-count">120</p></div>
+                <div class="card"><h3>Revenue</h3> <p>$5,000</p></div>
+                <div class="card"><h3>Active Tasks</h3> <p>15</p></div>
+            </section>
 
-<div id="content"></div>
+            <section class="data-section">
+                <h3>Recent Activities</h3>
+                <table id="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
 
-<script src="admin.js"></script>
-
+    <script src="admin.js"></script>
 </body>
-
 </html>
