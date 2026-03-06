@@ -227,24 +227,9 @@ const data = doc.data();
 
 html += `
 <div class="card">
-
-<h3>${data.name}</h3>
-
-<div class="btns">
-
-<button onclick="downloadPDF('${data.pdf}')">
-Download
-</button>
-
-<button onclick="readOnline('${data.pdf}')">
-Online
-</button>
-
-</div>
-
+${data.name}
 </div>
 `;
-
 
 /* ================= BACK ================= */
 
@@ -391,26 +376,3 @@ loadHome();
 checkLogin();
 
 
-function readOnline(file){
-
-let url =
-"https://akashmaurys56.github.io/Studybooks/pdf/" + file;
-
-window.location.href =
-"pdf-reader.html?file=" + url;
-
-}
-
-function downloadPDF(file){
-
-let url =
-"https://akashmaurys56.github.io/Studybooks/pdf/" + file;
-
-let a = document.createElement("a");
-
-a.href = url;
-a.download = file;
-
-a.click();
-
-}
