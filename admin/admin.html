@@ -34,7 +34,7 @@ window.location.href="admin-login.html";
   </div>
 </div><div id="subjectPopup" class="popup">
   <div class="popup-box">
-    <h3>Add Subject</h3><select id="subjectSectionSelect"></select>
+    <h3>Add Subject</h3><select id="subjectSectionSelect" onchange="loadClasses(this.value,'subjectClassSelect')"></select>
 
 <select id="subjectClassSelect"></select>
 
@@ -48,12 +48,11 @@ window.location.href="admin-login.html";
   </div>
 </div><div id="chapterPopup" class="popup">
   <div class="popup-box">
-    <h3>Add Chapter</h3><select id="chapterSectionSelect"></select>
+    <h3>Add Chapter</h3><select id="chapterSectionSelect" onchange="loadClasses(this.value,'chapterClassSelect')"></select>
 
-<select id="chapterClassSelect"></select>
+<select id="chapterClassSelect" onchange="loadSubjects(this.value,'chapterSubjectSelect')"></select>
 
 <select id="chapterSubjectSelect"></select>
-
 <input id="chapterInput" placeholder="Chapter Name">
 
 <div class="popup-buttons">
