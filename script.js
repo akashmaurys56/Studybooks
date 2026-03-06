@@ -401,11 +401,9 @@ let file = name.toLowerCase().replace(/ /g,"");
 let url =
 "https://akashmaurys56.github.io/Studybooks/pdf/class9/science/" + file + ".pdf";
 
-window.location.href =
-"pdf-reader.html?file=" + url;
+window.location.href = "pdf-reader.html?file=" + url;
 
 }
-
 
 function downloadPDF(name){
 
@@ -418,7 +416,6 @@ let a = document.createElement("a");
 
 a.href = url;
 a.download = file;
-
 a.click();
 
 }
