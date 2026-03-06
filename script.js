@@ -247,6 +247,9 @@ Online
 </div>
 `;
 
+html += "</div>";
+document.getElementById("content").innerHTML = html;
+
 /* ================= BACK ================= */
 
 function goBack(){
