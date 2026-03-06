@@ -1,31 +1,61 @@
-var db = firebase.firestore();
 
-function logout(){
-localStorage.removeItem("admin");
-window.location.href="admin-login.html";
+
+// Firebase DB
+const db = firebase.firestore();
+
+
+// ---------------- POPUP CONTROL ----------------
+
+function closeAllPopups(){
+document.getElementById("sectionPopup").style.display="none";
+document.getElementById("classPopup").style.display="none";
+document.getElementById("subjectPopup").style.display="none";
+document.getElementById("chapterPopup").style.display="none";
 }
+
+
+// ---------------- ADD SECTION ----------------
 
 function addSection(){
-let name=prompt("Section Name");
-if(!name)return;
-
-db.collection("sections").add({name:name});
-
-alert("Section Added");
+closeAllPopups();
+document.getElementById("sectionPopup").style.display="flex";
 }
+
+function saveSection(){
+
+let name=document.getElementById("sectionInput").value;
+
+if(name===""){
+alert("Enter Section Name");
+return;
+}
+
+db.collection("sections").add({
+name:name
+}).then(()=>{
+alert("Section Added");
+closeAllPopups();
+});
+
+}
+
+
+
+// ---------------- LOAD SECTIONS ----------------
 
 function loadSections(selectId){
 
-const select = document.getElementById(selectId);
-select.innerHTML = "";
+let select=document.getElementById(selectId);
+
+select.innerHTML="";
 
 db.collection("sections").get().then((snapshot)=>{
 
 snapshot.forEach((doc)=>{
 
-let option = document.createElement("option");
-option.value = doc.id;
-option.text = doc.data().name;
+let option=document.createElement("option");
+option.value=doc.id;
+option.text=doc.data().name;
 
 select.appendChild(option);
 
@@ -36,14 +66,8 @@ select.appendChild(option);
 }
 
 
-function addClass(){
-let name=prompt("Class Name");
-if(!name)return;
 
-db.collection("classes").add({name:name});
-
-alert("Class Added");
-}
+// ---------------- ADD CLASS ----------------
 
 function addClass(){
 
@@ -52,202 +76,39 @@ closeAllPopups();
 document.getElementById("classPopup").style.display="flex";
 
 loadSections("classSectionSelect");
-
-}
-
-function addSubject(){
-let name=prompt("Subject Name");
-if(!name)return;
-
-db.collection("subjects").add({name:name});
-
-alert("Subject Added");
-}
-
-function addSubject(){
-
-closeAllPopups();
-
-document.getElementById("subjectPopup").style.display="flex";
-
-loadSections("subjectSectionSelect");
-
-}
-
-function addChapter(){
-let name=prompt("Chapter Name");
-if(!name)return;
-
-db.collection("chapters").add({name:name});
-
-alert("Chapter Added");
-}
-
-function addChapter(){
-
-closeAllPopups();
-
-document.getElementById("chapterPopup").style.display="flex";
-
-loadSections("chapterSectionSelect");
-
-}
-
-function addSection(){
-
-closeAllPopups();
-
-document.getElementById("sectionPopup").style.display="flex";
-
-}
-
-function closePopup(){
-
-document.getElementById("sectionPopup").style.display="none";
-
-}
-
-function saveSection(){
-
-let name=document.getElementById("sectionInput").value;
-
-if(!name){
-alert("Enter section name");
-return;
-}
-
-db.collection("sections").add({
-name:name
-});
-
-document.getElementById("sectionInput").value="";
-closePopup();
-
-alert("Section Added");
-
-}
-
-document.getElementById("sectionPopup").style.display="flex";
-document.getElementById("sectionPopup").style.display="none";
-
-function addClass(){
-
-closeAllPopups();
-
-document.getElementById("classPopup").style.display="flex";
-
-loadSections("classSectionSelect");
-
-}
-
-function closeClassPopup(){
-
-document.getElementById("classPopup").style.display="none";
 
 }
 
 function saveClass(){
 
-let section=document.getElementById("classSectionSelect").value;
+let sectionId=document.getElementById("classSectionSelect").value;
+
 let name=document.getElementById("classInput").value;
 
+if(name===""){
+alert("Enter Class Name");
+return;
+}
+
 db.collection("classes").add({
-section:section,
-name:name
-});
-
-closeClassPopup();
-
+name:name,
+sectionId:sectionId
+}).then(()=>{
 alert("Class Added");
-
-}
-
-function addSubject(){
-
 closeAllPopups();
-
-document.getElementById("subjectPopup").style.display="flex";
-
-loadSections("subjectSectionSelect");
-
-}
-
-function closeSubjectPopup(){
-
-document.getElementById("subjectPopup").style.display="none";
-
-}
-
-function saveSubject(){
-
-let section=document.getElementById("subjectSectionSelect").value;
-let className=document.getElementById("subjectClassSelect").value;
-let name=document.getElementById("subjectInput").value;
-
-db.collection("subjects").add({
-section:section,
-class:className,
-name:name
 });
 
-closeSubjectPopup();
-
-alert("Subject Added");
-
 }
 
-function addChapter(){
 
-closeAllPopups();
 
-document.getElementById("chapterPopup").style.display="flex";
+// ---------------- LOAD CLASSES ----------------
 
-loadSections("chapterSectionSelect");
+function loadClasses(sectionId,selectId){
 
-}
+let select=document.getElementById(selectId);
 
-function closeChapterPopup(){
-
-document.getElementById("chapterPopup").style.display="none";
-
-}
-
-function saveChapter(){
-
-let section=document.getElementById("chapterSectionSelect").value;
-let className=document.getElementById("chapterClassSelect").value;
-let subject=document.getElementById("chapterSubjectSelect").value;
-let name=document.getElementById("chapterInput").value;
-
-db.collection("chapters").add({
-section:section,
-class:className,
-subject:subject,
-name:name
-});
-
-closeChapterPopup();
-
-alert("Chapter Added");
-
-}
-
-function closeAllPopups(){
-
-document.getElementById("sectionPopup").style.display="none";
-document.getElementById("classPopup").style.display="none";
-document.getElementById("subjectPopup").style.display="none";
-document.getElementById("chapterPopup").style.display="none";
-
-}
-
-document.getElementById("chapterSectionSelect").onchange=function(){
-
-let sectionId=this.value;
-
-let classSelect=document.getElementById("chapterClassSelect");
-
-classSelect.innerHTML="";
+select.innerHTML="";
 
 db.collection("classes")
 .where("sectionId","==",sectionId)
@@ -260,10 +121,152 @@ let option=document.createElement("option");
 option.value=doc.id;
 option.text=doc.data().name;
 
-classSelect.appendChild(option);
+select.appendChild(option);
 
 });
 
 });
+
+}
+
+
+
+// ---------------- ADD SUBJECT ----------------
+
+function addSubject(){
+
+closeAllPopups();
+
+document.getElementById("subjectPopup").style.display="flex";
+
+loadSections("subjectSectionSelect");
+
+}
+
+document.getElementById("subjectSectionSelect").onchange=function(){
+
+loadClasses(this.value,"subjectClassSelect");
+
+};
+
+
+function saveSubject(){
+
+let sectionId=document.getElementById("subjectSectionSelect").value;
+
+let classId=document.getElementById("subjectClassSelect").value;
+
+let name=document.getElementById("subjectInput").value;
+
+if(name===""){
+alert("Enter Subject Name");
+return;
+}
+
+db.collection("subjects").add({
+name:name,
+sectionId:sectionId,
+classId:classId
+}).then(()=>{
+alert("Subject Added");
+closeAllPopups();
+});
+
+}
+
+
+
+// ---------------- LOAD SUBJECTS ----------------
+
+function loadSubjects(classId,selectId){
+
+let select=document.getElementById(selectId);
+
+select.innerHTML="";
+
+db.collection("subjects")
+.where("classId","==",classId)
+.get()
+.then((snapshot)=>{
+
+snapshot.forEach((doc)=>{
+
+let option=document.createElement("option");
+option.value=doc.id;
+option.text=doc.data().name;
+
+select.appendChild(option);
+
+});
+
+});
+
+}
+
+
+
+// ---------------- ADD CHAPTER ----------------
+
+function addChapter(){
+
+closeAllPopups();
+
+document.getElementById("chapterPopup").style.display="flex";
+
+loadSections("chapterSectionSelect");
+
+}
+
+
+document.getElementById("chapterSectionSelect").onchange=function(){
+
+loadClasses(this.value,"chapterClassSelect");
+
+};
+
+
+document.getElementById("chapterClassSelect").onchange=function(){
+
+loadSubjects(this.value,"chapterSubjectSelect");
+
+};
+
+
+function saveChapter(){
+
+let sectionId=document.getElementById("chapterSectionSelect").value;
+
+let classId=document.getElementById("chapterClassSelect").value;
+
+let subjectId=document.getElementById("chapterSubjectSelect").value;
+
+let name=document.getElementById("chapterInput").value;
+
+if(name===""){
+alert("Enter Chapter Name");
+return;
+}
+
+db.collection("chapters").add({
+name:name,
+sectionId:sectionId,
+classId:classId,
+subjectId:subjectId
+}).then(()=>{
+alert("Chapter Added");
+closeAllPopups();
+});
+
+}
+
+
+
+// ---------------- LOGOUT ----------------
+
+function logout(){
+
+localStorage.removeItem("admin");
+
+window.location.href="admin-login.html";
 
 }
