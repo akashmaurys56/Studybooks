@@ -210,7 +210,7 @@ subjectName
 
 document.getElementById("pageTitle").innerText = subjectName;
 
-let html="<div class='grid'>";
+let html = "<div class='grid'>";
 
 const snapshot = await db.collection("sections")
 .doc(sectionId)
@@ -227,27 +227,14 @@ const data = doc.data();
 
 html += `
 <div class="card">
-
-<div class="chapter-title">
 ${data.name}
-</div>
-
-<div class="chapter-buttons">
-
-<button onclick="downloadPDF('${data.name}')">
-Download
-</button>
-
-<button onclick="readOnline('${data.name}')">
-Online
-</button>
-
-</div>
-
 </div>
 `;
 
+});
+
 html += "</div>";
+
 document.getElementById("content").innerHTML = html;
 
 /* ================= BACK ================= */
