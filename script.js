@@ -1,408 +1,270 @@
-firebase.auth().onAuthStateChanged(function(user){
-
-if(user){
-
-// user logged in
-console.log("User logged in");
-
-}else{
-
-// not logged in
-window.location.href="login.html";
-
-}
-
-});
-
-let navigationStack = [];
-let currentPage = { type: "home" };
-
-const ADMIN_EMAIL = "mauryaumesh195@gmail.com";
+// Firebase DB
+const db = firebase.firestore();
 
 
-/* ================= MENU ================= */
+// ---------------- POPUP CONTROL ----------------
 
-function toggleMenu() {
-
-const menu = document.getElementById("sideMenu");
-
-if(menu.style.left === "0px"){
-menu.style.left = "-220px";
-}else{
-menu.style.left = "0px";
-}
-
-}
-
-function closeMenu(){
-document.getElementById("sideMenu").style.left = "-220px";
-}
-
-function setDarkMode(){
-document.body.classList.add("dark");
-closeMenu();
-}
-
-function setLightMode(){
-document.body.classList.remove("dark");
-closeMenu();
-}
-
-function logout(){
-
-firebase.auth().signOut().then(()=>{
-
-window.location.href="login.html";
-
-});
-
-}
-
-/* ================= HOME ================= */
-
-async function loadHome(){
-
-currentPage = { type:"home" };
-
-document.getElementById("pageTitle").innerText = "StudyBooks";
-
-document.querySelector(".menu-btn").style.display = "flex";
-document.getElementById("backBtn").style.display = "none";
-
-let html = "<div class='grid'>";
-
-const snapshot = await db.collection("sections").get();
-
-snapshot.forEach(doc => {
-
-const data = doc.data();
-const sectionName = data.name || "No Name";
-
-html += `
-<div class="card"
-onclick="openSection('${doc.id}','${sectionName}')">
-
-<span class="icon material-icons">menu_book</span>
-
-${sectionName}
-
-</div>
-`;
-
-});
-
-html += "</div>";
-
-document.getElementById("content").innerHTML = html;
-
+function closeAllPopups(){
+document.getElementById("sectionPopup").style.display="none";
+document.getElementById("classPopup").style.display="none";
+document.getElementById("subjectPopup").style.display="none";
+document.getElementById("chapterPopup").style.display="none";
 }
 
 
-/* ================= SECTION ================= */
-
-async function openSection(sectionId,sectionName,save=true){
-
-if(save){
-navigationStack.push({...currentPage});
-}
-
-currentPage={
-type:"section",
-sectionId,
-sectionName
-};
-
-document.getElementById("pageTitle").innerText = sectionName;
-
-document.querySelector(".menu-btn").style.display = "none";
-document.getElementById("backBtn").style.display = "flex";
-
-closeMenu();
-
-let html="<div class='grid'>";
-
-const snapshot = await db.collection("sections")
-.doc(sectionId)
-.collection("classes")
-.get();
-
-snapshot.forEach(doc => {
-
-const data = doc.data();
-
-html += `
-<div class="card"
-onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
-${data.name}
-</div>
-`;
-
-});
-
-html+="</div>";
-
-document.getElementById("content").innerHTML = html;
-
-}
-
-
-/* ================= CLASS ================= */
-
-async function openClass(sectionId,classId,className,save=true){
-
-if(save){
-navigationStack.push({...currentPage});
-}
-
-currentPage={
-type:"class",
-sectionId,
-classId,
-className
-};
-
-document.getElementById("pageTitle").innerText = className;
-
-let html="<div class='grid'>";
-
-const snapshot = await db.collection("sections")
-.doc(sectionId)
-.collection("classes")
-.doc(classId)
-.collection("subjects")
-.get();
-
-snapshot.forEach(doc => {
-
-const data = doc.data();
-
-html += `
-<div class="card"
-onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
-${data.name}
-</div>
-`;
-
-});
-
-html+="</div>";
-
-document.getElementById("content").innerHTML = html;
-
-}
-
-
-/* ================= SUBJECT ================= */
-
-async function openSubject(sectionId,classId,subjectId,subjectName,save=true){
-
-if(save){
-navigationStack.push({...currentPage});
-}
-
-currentPage={
-type:"subject",
-sectionId,
-classId,
-subjectId,
-subjectName
-};
-
-document.getElementById("pageTitle").innerText = subjectName;
-
-let html = "<div class='grid'>";
-
-const snapshot = await db.collection("sections")
-.doc(sectionId)
-.collection("classes")
-.doc(classId)
-.collection("subjects")
-.doc(subjectId)
-.collection("chapters")
-.get();
-
-snapshot.forEach(doc => {
-
-const data = doc.data();
-
-html += `
-<div class="card">
-${data.name}
-</div>
-`;
-
-});
-
-html += "</div>";
-
-document.getElementById("content").innerHTML = html;
-
-/* ================= BACK ================= */
-
-function goBack(){
-
-if(navigationStack.length > 0){
-
-currentPage = navigationStack.pop();
-renderPage();
-
-}else{
-
-loadHome();
-
-}
-
-}
-
-
-/* ================= RENDER ================= */
-
-async function renderPage(){
-
-if(currentPage.type==="home"){
-loadHome();
-}
-
-if(currentPage.type==="section"){
-openSection(currentPage.sectionId,currentPage.sectionName,false);
-}
-
-if(currentPage.type==="class"){
-openClass(
-currentPage.sectionId,
-currentPage.classId,
-currentPage.className,
-false
-);
-}
-
-if(currentPage.type==="subject"){
-openSubject(
-currentPage.sectionId,
-currentPage.classId,
-currentPage.subjectId,
-currentPage.subjectName,
-false
-);
-}
-
-}
-
-function checkLogin(){
-
-const email = localStorage.getItem("userEmail");
-
-if(!email){
-
-window.location.href = "login.html";
-return;
-
-}
-
-if(email === ADMIN_EMAIL){
-
-document.body.classList.add("admin");
-
-}
-
-}
-
-function logout(){
-
-firebase.auth().signOut().then(()=>{
-
-window.location.href="login.html";
-
-});
-
-}
-
-function openAdmin(){
-
-document.getElementById("pageTitle").innerText = "Admin Panel";
-
-document.getElementById("content").innerHTML = `
-
-<div class="grid">
-
-<div class="card" onclick="showAddSection()">
-<span class="material-icons">add</span>
-Add Section
-</div>
-
-</div>
-
-`;
-
-}
-
-function showAddSection(){
-
-document.getElementById("pageTitle").innerText = "Add Section";
-
-document.getElementById("content").innerHTML = `
-
-<input id="sectionName" placeholder="Section Name">
-
-<button onclick="addSection()">Add Section</button>
-
-`;
-
-}
+// ---------------- ADD SECTION ----------------
 
 function addSection(){
+closeAllPopups();
+document.getElementById("sectionPopup").style.display="flex";
+}
 
-const name = document.getElementById("sectionName").value;
+function saveSection(){
 
-if(!name){
-alert("Enter section name");
+let name=document.getElementById("sectionInput").value;
+
+if(name===""){
+alert("Enter Section Name");
 return;
 }
 
 db.collection("sections").add({
-
 name:name
-
 }).then(()=>{
-
 alert("Section Added");
-
-loadHome();
-
+closeAllPopups();
 });
-
-} 
-
-
-
-
-
-/* ================= START ================= */
-
-checkLogin();
-
-function readOnline(name){
-
-let file = name.toLowerCase().replace(/ /g,"");
-
-let url =
-"https://akashmaurys56.github.io/Studybooks/pdf/class9/science/" + file + ".pdf";
-
-window.location.href = "pdf-reader.html?file=" + url;
 
 }
 
-function downloadPDF(name){
 
-let file = name.toLowerCase().replace(/ /g,"");
 
-let url =
-"https://akashmaurys56.github.io/Studybooks/pdf/class9/science/" + file + ".pdf";
+// ---------------- LOAD SECTIONS ----------------
 
-let a = document.createElement("a");
+function loadSections(selectId){
 
-a.href = url;
-a.download = file;
-a.click();
+let select=document.getElementById(selectId);
+
+select.innerHTML="";
+
+db.collection("sections").get().then((snapshot)=>{
+
+snapshot.forEach((doc)=>{
+
+let option=document.createElement("option");
+option.value=doc.id;
+option.text=doc.data().name;
+
+select.appendChild(option);
+
+});
+
+});
+
+}
+
+
+
+// ---------------- ADD CLASS ----------------
+
+function addClass(){
+
+closeAllPopups();
+
+document.getElementById("classPopup").style.display="flex";
+
+loadSections("classSectionSelect");
+
+}
+
+function saveClass(){
+
+let sectionId=document.getElementById("classSectionSelect").value;
+
+let name=document.getElementById("classInput").value;
+
+if(name===""){
+alert("Enter Class Name");
+return;
+}
+
+db.collection("classes").add({
+name:name,
+sectionId:sectionId
+}).then(()=>{
+alert("Class Added");
+closeAllPopups();
+});
+
+}
+
+
+
+// ---------------- LOAD CLASSES ----------------
+
+function loadClasses(sectionId,selectId){
+
+let select=document.getElementById(selectId);
+
+select.innerHTML="";
+
+db.collection("classes")
+.where("sectionId","==",sectionId)
+.get()
+.then((snapshot)=>{
+
+snapshot.forEach((doc)=>{
+
+let option=document.createElement("option");
+option.value=doc.id;
+option.text=doc.data().name;
+
+select.appendChild(option);
+
+});
+
+});
+
+}
+
+
+
+// ---------------- ADD SUBJECT ----------------
+
+function addSubject(){
+
+closeAllPopups();
+
+document.getElementById("subjectPopup").style.display="flex";
+
+loadSections("subjectSectionSelect");
+
+}
+
+document.getElementById("subjectSectionSelect").onchange=function(){
+
+loadClasses(this.value,"subjectClassSelect");
+
+};
+
+
+function saveSubject(){
+
+let sectionId=document.getElementById("subjectSectionSelect").value;
+
+let classId=document.getElementById("subjectClassSelect").value;
+
+let name=document.getElementById("subjectInput").value;
+
+if(name===""){
+alert("Enter Subject Name");
+return;
+}
+
+db.collection("subjects").add({
+name:name,
+sectionId:sectionId,
+classId:classId
+}).then(()=>{
+alert("Subject Added");
+closeAllPopups();
+});
+
+}
+
+
+
+// ---------------- LOAD SUBJECTS ----------------
+
+function loadSubjects(classId,selectId){
+
+let select=document.getElementById(selectId);
+
+select.innerHTML="";
+
+db.collection("subjects")
+.where("classId","==",classId)
+.get()
+.then((snapshot)=>{
+
+snapshot.forEach((doc)=>{
+
+let option=document.createElement("option");
+option.value=doc.id;
+option.text=doc.data().name;
+
+select.appendChild(option);
+
+});
+
+});
+
+}
+
+
+
+// ---------------- ADD CHAPTER ----------------
+
+function addChapter(){
+
+closeAllPopups();
+
+document.getElementById("chapterPopup").style.display="flex";
+
+loadSections("chapterSectionSelect");
+
+}
+
+
+document.getElementById("chapterSectionSelect").onchange=function(){
+
+loadClasses(this.value,"chapterClassSelect");
+
+};
+
+
+document.getElementById("chapterClassSelect").onchange=function(){
+
+loadSubjects(this.value,"chapterSubjectSelect");
+
+};
+
+
+function saveChapter(){
+
+let sectionId=document.getElementById("chapterSectionSelect").value;
+
+let classId=document.getElementById("chapterClassSelect").value;
+
+let subjectId=document.getElementById("chapterSubjectSelect").value;
+
+let name=document.getElementById("chapterInput").value;
+
+if(name===""){
+alert("Enter Chapter Name");
+return;
+}
+
+db.collection("chapters").add({
+name:name,
+sectionId:sectionId,
+classId:classId,
+subjectId:subjectId
+}).then(()=>{
+alert("Chapter Added");
+closeAllPopups();
+});
+
+}
+
+
+
+// ---------------- LOGOUT ----------------
+
+function logout(){
+
+localStorage.removeItem("admin");
+
+window.location.href="admin-login.html";
 
 }
