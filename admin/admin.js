@@ -1,7 +1,7 @@
 
 
 // Firebase DB
-var db = firebase.firestore();
+const db = firebase.firestore();
 
 
 // ---------------- POPUP CONTROL ----------------
@@ -270,3 +270,32 @@ localStorage.removeItem("admin");
 window.location.href="admin-login.html";
 
 }
+
+
+window.onload = function(){
+
+let subjectSection = document.getElementById("subjectSectionSelect");
+
+if(subjectSection){
+subjectSection.onchange = function(){
+loadClasses(this.value,"subjectClassSelect");
+}
+}
+
+let chapterSection = document.getElementById("chapterSectionSelect");
+
+if(chapterSection){
+chapterSection.onchange = function(){
+loadClasses(this.value,"chapterClassSelect");
+}
+}
+
+let chapterClass = document.getElementById("chapterClassSelect");
+
+if(chapterClass){
+chapterClass.onchange = function(){
+loadSubjects(this.value,"chapterSubjectSelect");
+}
+}
+
+};
