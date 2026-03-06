@@ -9,41 +9,59 @@ window.location.href="admin-login.html";
 
 <button onclick="logout()">Logout</button>
 
-</div><div class="cards"><div class="card" onclick="addSection()">Add Section</div><div class="card" onclick="addClass()">Add Class</div><div class="card" onclick="addSubject()">Add Subject</div><div class="card" onclick="addChapter()">Add Chapter</div></div><script src="admin.js"></script><div id="sectionPopup" class="popup"><div class="popup-box"><h3>Add Section</h3><input id="sectionInput" placeholder="Section Name"><div class="popup-buttons"><button onclick="saveSection()">Save</button>
+</div><div class="cards"><div class="card" onclick="addSection()">Add Section</div><div class="card" onclick="addClass()">Add Class</div><div class="card" onclick="addSubject()">Add Subject</div><div class="card" onclick="addChapter()">Add Chapter</div></div><script src="admin.js"></script>
+<div id="sectionPopup" class="popup">
+  <div class="popup-box">
+    <h3>Add Section</h3><input id="sectionInput" placeholder="Section Name">
 
-<button onclick="closeAllPopups()">Cancel</button>
+<div class="popup-buttons">
+  <button onclick="saveSection()">Save</button>
+  <button onclick="closeAllPopups()">Cancel</button>
+</div>
 
-<div id="classPopup" class="popup"><div class="popup-box"><h3>Add Class</h3><select id="classSectionSelect"></select>
+  </div>
+</div><div id="classPopup" class="popup">
+  <div class="popup-box">
+    <h3>Add Class</h3><select id="classSectionSelect"></select>
 
-<input id="classInput" placeholder="Class Name"><div class="popup-buttons"><button onclick="saveClass()">Save</button>
+<input id="classInput" placeholder="Class Name">
 
-<button onclick="closeAllPopups()">Cancel</button>
+<div class="popup-buttons">
+  <button onclick="saveClass()">Save</button>
+  <button onclick="closeAllPopups()">Cancel</button>
+</div>
 
-</div></div></div>
-
-<div id="subjectPopup" class="popup"><div class="popup-box"><h3>Add Subject</h3><select id="subjectSectionSelect"></select>
+  </div>
+</div><div id="subjectPopup" class="popup">
+  <div class="popup-box">
+    <h3>Add Subject</h3><select id="subjectSectionSelect"></select>
 
 <select id="subjectClassSelect"></select>
 
-<input id="subjectInput" placeholder="Subject Name"><div class="popup-buttons"><button onclick="saveSubject()">Save</button>
+<input id="subjectInput" placeholder="Subject Name">
 
-<button onclick="closeAllPopups()">Cancel</button>
+<div class="popup-buttons">
+  <button onclick="saveSubject()">Save</button>
+  <button onclick="closeAllPopups()">Cancel</button>
+</div>
 
-</div></div></div>
-
-<div id="chapterPopup" class="popup"><div class="popup-box"><h3>Add Chapter</h3><select id="chapterSectionSelect"></select>
+  </div>
+</div><div id="chapterPopup" class="popup">
+  <div class="popup-box">
+    <h3>Add Chapter</h3><select id="chapterSectionSelect"></select>
 
 <select id="chapterClassSelect"></select>
 
 <select id="chapterSubjectSelect"></select>
 
-<input id="chapterInput" placeholder="Chapter Name"><div class="popup-buttons"><button onclick="saveChapter()">Save</button>
+<input id="chapterInput" placeholder="Chapter Name">
 
-<button onclick="closeAllPopups()">Cancel</button>
+<div class="popup-buttons">
+  <button onclick="saveChapter()">Save</button>
+  <button onclick="closeAllPopups()">Cancel</button>
+</div>
 
-</div></div></div>
-
-
-
-</div></div></div></body>
+  </div>
+</div>
+</body>
 </html>
