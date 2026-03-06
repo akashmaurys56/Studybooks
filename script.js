@@ -227,17 +227,23 @@ const data = doc.data();
 
 html += `
 <div class="card">
-${data.name}
+
+<h3>${data.name}</h3>
+
+<div class="btns">
+
+<button onclick="downloadPDF('${data.pdf}')">
+Download
+</button>
+
+<button onclick="readOnline('${data.pdf}')">
+Online
+</button>
+
+</div>
+
 </div>
 `;
-
-});
-
-html+="</div>";
-
-document.getElementById("content").innerHTML = html;
-
-}
 
 
 /* ================= BACK ================= */
