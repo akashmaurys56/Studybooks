@@ -14,6 +14,28 @@ db.collection("sections").add({name:name});
 alert("Section Added");
 }
 
+function loadSections(selectId){
+
+const select = document.getElementById(selectId);
+select.innerHTML = "";
+
+db.collection("sections").get().then((snapshot)=>{
+
+snapshot.forEach((doc)=>{
+
+let option = document.createElement("option");
+option.value = doc.id;
+option.text = doc.data().name;
+
+select.appendChild(option);
+
+});
+
+});
+
+}
+
+
 function addClass(){
 let name=prompt("Class Name");
 if(!name)return;
@@ -21,6 +43,16 @@ if(!name)return;
 db.collection("classes").add({name:name});
 
 alert("Class Added");
+}
+
+function addClass(){
+
+closeAllPopups();
+
+document.getElementById("classPopup").style.display="flex";
+
+loadSections("classSectionSelect");
+
 }
 
 function addSubject(){
@@ -32,6 +64,16 @@ db.collection("subjects").add({name:name});
 alert("Subject Added");
 }
 
+function addSubject(){
+
+closeAllPopups();
+
+document.getElementById("subjectPopup").style.display="flex";
+
+loadSections("subjectSectionSelect");
+
+}
+
 function addChapter(){
 let name=prompt("Chapter Name");
 if(!name)return;
@@ -39,6 +81,16 @@ if(!name)return;
 db.collection("chapters").add({name:name});
 
 alert("Chapter Added");
+}
+
+function addChapter(){
+
+closeAllPopups();
+
+document.getElementById("chapterPopup").style.display="flex";
+
+loadSections("chapterSectionSelect");
+
 }
 
 function addSection(){
@@ -186,5 +238,32 @@ document.getElementById("sectionPopup").style.display="none";
 document.getElementById("classPopup").style.display="none";
 document.getElementById("subjectPopup").style.display="none";
 document.getElementById("chapterPopup").style.display="none";
+
+}
+
+document.getElementById("chapterSectionSelect").onchange=function(){
+
+let sectionId=this.value;
+
+let classSelect=document.getElementById("chapterClassSelect");
+
+classSelect.innerHTML="";
+
+db.collection("classes")
+.where("sectionId","==",sectionId)
+.get()
+.then((snapshot)=>{
+
+snapshot.forEach((doc)=>{
+
+let option=document.createElement("option");
+option.value=doc.id;
+option.text=doc.data().name;
+
+classSelect.appendChild(option);
+
+});
+
+});
 
 }
