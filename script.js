@@ -376,6 +376,26 @@ loadHome();
 
 } 
 
+db.collection("chapters").get().then((snapshot)=>{
+
+snapshot.forEach((doc)=>{
+
+let data=doc.data();
+
+let div=document.createElement("div");
+div.innerText=data.name;
+
+div.onclick=function(){
+
+window.open(data.pdf);
+
+};
+
+document.body.appendChild(div);
+
+});
+
+});
 
 
 
