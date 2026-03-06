@@ -1,7 +1,7 @@
 
 
 // Firebase DB
-const db = firebase.firestore();
+var db = firebase.firestore();
 
 
 // ---------------- POPUP CONTROL ----------------
