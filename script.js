@@ -389,3 +389,28 @@ loadHome();
 /* ================= START ================= */
 
 checkLogin();
+
+
+function readOnline(file){
+
+let url =
+"https://akashmaurys56.github.io/Studybooks/pdf/" + file;
+
+window.location.href =
+"pdf-reader.html?file=" + url;
+
+}
+
+function downloadPDF(file){
+
+let url =
+"https://akashmaurys56.github.io/Studybooks/pdf/" + file;
+
+let a = document.createElement("a");
+
+a.href = url;
+a.download = file;
+
+a.click();
+
+}
