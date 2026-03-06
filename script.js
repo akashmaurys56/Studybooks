@@ -227,9 +227,26 @@ const data = doc.data();
 
 html += `
 <div class="card">
+
+<div class="chapter-title">
 ${data.name}
 </div>
+
+<div class="chapter-buttons">
+
+<button onclick="downloadPDF('${data.name}')">
+Download
+</button>
+
+<button onclick="readOnline('${data.name}')">
+Online
+</button>
+
+</div>
+
+</div>
 `;
+
 
 /* ================= BACK ================= */
 
@@ -375,3 +392,31 @@ loadHome();
 
 checkLogin();
 
+function readOnline(name){
+
+let file = name.toLowerCase().replace(/ /g,"");
+
+let url =
+"https://akashmaurys56.github.io/Studybooks/pdf/class9/science/" + file + ".pdf";
+
+window.location.href =
+"pdf-reader.html?file=" + url;
+
+}
+
+
+function downloadPDF(name){
+
+let file = name.toLowerCase().replace(/ /g,"");
+
+let url =
+"https://akashmaurys56.github.io/Studybooks/pdf/class9/science/" + file + ".pdf";
+
+let a = document.createElement("a");
+
+a.href = url;
+a.download = file;
+
+a.click();
+
+}
