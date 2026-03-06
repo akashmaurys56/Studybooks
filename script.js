@@ -1,270 +1,262 @@
-// Firebase DB
-const db = firebase.firestore();
+let navigationStack = [];
+let currentPage = { type: "sections" };
 
+const content = document.getElementById("content");
 
-// ---------------- POPUP CONTROL ----------------
+function renderPage() {
 
-function closeAllPopups(){
-document.getElementById("sectionPopup").style.display="none";
-document.getElementById("classPopup").style.display="none";
-document.getElementById("subjectPopup").style.display="none";
-document.getElementById("chapterPopup").style.display="none";
+if (currentPage.type === "sections") {
+loadSections();
 }
 
-
-// ---------------- ADD SECTION ----------------
-
-function addSection(){
-closeAllPopups();
-document.getElementById("sectionPopup").style.display="flex";
+if (currentPage.type === "classes") {
+loadClasses(currentPage.sectionId);
 }
 
-function saveSection(){
-
-let name=document.getElementById("sectionInput").value;
-
-if(name===""){
-alert("Enter Section Name");
-return;
+if (currentPage.type === "subjects") {
+loadSubjects(currentPage.sectionId, currentPage.classId);
 }
 
-db.collection("sections").add({
-name:name
-}).then(()=>{
-alert("Section Added");
-closeAllPopups();
-});
+if (currentPage.type === "chapters") {
+loadChapters(currentPage.sectionId, currentPage.classId, currentPage.subjectId);
+}
 
 }
 
 
 
-// ---------------- LOAD SECTIONS ----------------
 
-function loadSections(selectId){
 
-let select=document.getElementById(selectId);
 
-select.innerHTML="";
 
-db.collection("sections").get().then((snapshot)=>{
+/* ================= SECTIONS ================= */
 
-snapshot.forEach((doc)=>{
+async function loadSections(){
 
-let option=document.createElement("option");
-option.value=doc.id;
-option.text=doc.data().name;
+document.getElementById("pageTitle").innerText = "Sections";
 
-select.appendChild(option);
+let html = `<div class="grid">`;
+
+const snapshot = await db.collection("sections").get();
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+html += `
+<div class="card"
+onclick="openSection('${doc.id}','${data.name}')">
+${data.name}
+</div>
+`;
 
 });
 
-});
+html += `</div>`;
+
+content.innerHTML = html;
 
 }
 
 
 
-// ---------------- ADD CLASS ----------------
-
-function addClass(){
-
-closeAllPopups();
-
-document.getElementById("classPopup").style.display="flex";
-
-loadSections("classSectionSelect");
-
-}
-
-function saveClass(){
-
-let sectionId=document.getElementById("classSectionSelect").value;
-
-let name=document.getElementById("classInput").value;
-
-if(name===""){
-alert("Enter Class Name");
-return;
-}
-
-db.collection("classes").add({
-name:name,
-sectionId:sectionId
-}).then(()=>{
-alert("Class Added");
-closeAllPopups();
-});
-
-}
 
 
+function openSection(sectionId,sectionName){
 
-// ---------------- LOAD CLASSES ----------------
+navigationStack.push({...currentPage});
 
-function loadClasses(sectionId,selectId){
-
-let select=document.getElementById(selectId);
-
-select.innerHTML="";
-
-db.collection("classes")
-.where("sectionId","==",sectionId)
-.get()
-.then((snapshot)=>{
-
-snapshot.forEach((doc)=>{
-
-let option=document.createElement("option");
-option.value=doc.id;
-option.text=doc.data().name;
-
-select.appendChild(option);
-
-});
-
-});
-
-}
-
-
-
-// ---------------- ADD SUBJECT ----------------
-
-function addSubject(){
-
-closeAllPopups();
-
-document.getElementById("subjectPopup").style.display="flex";
-
-loadSections("subjectSectionSelect");
-
-}
-
-document.getElementById("subjectSectionSelect").onchange=function(){
-
-loadClasses(this.value,"subjectClassSelect");
-
+currentPage={
+type:"classes",
+sectionId
 };
 
+document.getElementById("pageTitle").innerText = sectionName;
 
-function saveSubject(){
-
-let sectionId=document.getElementById("subjectSectionSelect").value;
-
-let classId=document.getElementById("subjectClassSelect").value;
-
-let name=document.getElementById("subjectInput").value;
-
-if(name===""){
-alert("Enter Subject Name");
-return;
-}
-
-db.collection("subjects").add({
-name:name,
-sectionId:sectionId,
-classId:classId
-}).then(()=>{
-alert("Subject Added");
-closeAllPopups();
-});
+renderPage();
 
 }
 
 
 
-// ---------------- LOAD SUBJECTS ----------------
 
-function loadSubjects(classId,selectId){
 
-let select=document.getElementById(selectId);
 
-select.innerHTML="";
 
-db.collection("subjects")
-.where("classId","==",classId)
-.get()
-.then((snapshot)=>{
+/* ================= CLASSES ================= */
 
-snapshot.forEach((doc)=>{
+async function loadClasses(sectionId){
 
-let option=document.createElement("option");
-option.value=doc.id;
-option.text=doc.data().name;
+let html = `<div class="grid">`;
 
-select.appendChild(option);
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.get();
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+html += `
+<div class="card"
+onclick="openClass('${sectionId}','${doc.id}','${data.name}')">
+${data.name}
+</div>
+`;
 
 });
 
-});
+html += `</div>`;
+
+content.innerHTML = html;
 
 }
 
 
 
-// ---------------- ADD CHAPTER ----------------
 
-function addChapter(){
+function openClass(sectionId,classId,className){
 
-closeAllPopups();
+navigationStack.push({...currentPage});
 
-document.getElementById("chapterPopup").style.display="flex";
-
-loadSections("chapterSectionSelect");
-
-}
-
-
-document.getElementById("chapterSectionSelect").onchange=function(){
-
-loadClasses(this.value,"chapterClassSelect");
-
+currentPage={
+type:"subjects",
+sectionId,
+classId
 };
 
+document.getElementById("pageTitle").innerText = className;
 
-document.getElementById("chapterClassSelect").onchange=function(){
+renderPage();
 
-loadSubjects(this.value,"chapterSubjectSelect");
-
-};
-
-
-function saveChapter(){
-
-let sectionId=document.getElementById("chapterSectionSelect").value;
-
-let classId=document.getElementById("chapterClassSelect").value;
-
-let subjectId=document.getElementById("chapterSubjectSelect").value;
-
-let name=document.getElementById("chapterInput").value;
-
-if(name===""){
-alert("Enter Chapter Name");
-return;
 }
 
-db.collection("chapters").add({
-name:name,
-sectionId:sectionId,
-classId:classId,
-subjectId:subjectId
-}).then(()=>{
-alert("Chapter Added");
-closeAllPopups();
+
+
+
+
+
+
+/* ================= SUBJECTS ================= */
+
+async function loadSubjects(sectionId,classId){
+
+let html = `<div class="grid">`;
+
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.doc(classId)
+.collection("subjects")
+.get();
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+html += `
+<div class="card"
+onclick="openSubject('${sectionId}','${classId}','${doc.id}','${data.name}')">
+${data.name}
+</div>
+`;
+
 });
 
+html += `</div>`;
+
+content.innerHTML = html;
+
+}
+
+
+
+
+
+function openSubject(sectionId,classId,subjectId,subjectName){
+
+navigationStack.push({...currentPage});
+
+currentPage={
+type:"chapters",
+sectionId,
+classId,
+subjectId
+};
+
+document.getElementById("pageTitle").innerText = subjectName;
+
+renderPage();
+
 }
 
 
 
-// ---------------- LOGOUT ----------------
 
-function logout(){
 
-localStorage.removeItem("admin");
 
-window.location.href="admin-login.html";
+
+
+/* ================= CHAPTERS ================= */
+
+async function loadChapters(sectionId,classId,subjectId){
+
+let html = `<div class="grid">`;
+
+const snapshot = await db.collection("sections")
+.doc(sectionId)
+.collection("classes")
+.doc(classId)
+.collection("subjects")
+.doc(subjectId)
+.collection("chapters")
+.get();
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+html += `
+<div class="card">
+${data.name}
+</div>
+`;
+
+});
+
+html += `</div>`;
+
+content.innerHTML = html;
 
 }
+
+
+
+
+
+
+
+/* ================= BACK ================= */
+
+function goBack(){
+
+if(navigationStack.length > 0){
+
+currentPage = navigationStack.pop();
+
+renderPage();
+
+}
+
+}
+
+
+
+
+
+
+
+/* ================= START ================= */
+
+renderPage();
